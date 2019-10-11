@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from './Layout';
 
-const Home = () => {
+const Budgets = () => {
   return (
     <Layout>
       <h1>Welcome Home!</h1>
@@ -9,4 +9,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Budgets;
