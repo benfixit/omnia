@@ -4,6 +4,12 @@ const Table = styled.table`
   border: thin solid #888888;
   border-collapse: collapse;
   width: 70%;
+  tr:nth-child(even) {
+    background-color: #f0edeb;
+  }
+  tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
 `;
 
 const Td = styled.td`
@@ -14,6 +20,8 @@ const Td = styled.td`
 
 const Th = styled.th`
   border: thin solid #888888;
+  background-color: #a09280;
+  color: white;
   padding: 5px 2px;
   text-align: left;
 `;
