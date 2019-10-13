@@ -16,7 +16,10 @@ module.exports = {
     open: true,
     publicPath: '/',
     historyApiFallback: true,
-    contentBase: './dist'
+    contentBase: './dist',
+    proxy: {
+      '/graphql': 'http://localhost:4000'
+    }
   },
   module: {
     rules: [

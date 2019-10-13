@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { v4 } from 'uuid';
 
 const Container = styled.div`
   padding: 4px 2px;
@@ -20,13 +19,6 @@ const StyledSelect = styled.select`
   min-width: 210px;
 `;
 
-const handleChange = (event, name, action) => {
-  const {
-    target: { value }
-  } = event;
-  action(name, value);
-};
-
 const Select = props => {
   const {
     field,
@@ -43,15 +35,16 @@ const Select = props => {
         {...field}
         {...rest}
         value={options.find(option => {
-          return option === field.value;
+          return option.title === field.value;
         })}
         onChange={() => {
-          handleChange(field.name, setFieldValue);
+          // eslint-disable-next-line no-restricted-globals
+          setFieldValue(field.name, event.target.value);
         }}
       >
-        {options.map(item => (
-          <option key={v4()} value={item}>
-            {item}
+        {options.map(({ _id: id, title }) => (
+          <option key={id} value={id}>
+            {title}
           </option>
         ))}
       </StyledSelect>
@@ -62,7 +55,7 @@ const Select = props => {
 Select.propTypes = {
   field: PropTypes.shape({
     name: PropTypes.string,
-    value: PropTypes.string
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
   }),
   form: PropTypes.shape({
     touched: PropTypes.shape({}),

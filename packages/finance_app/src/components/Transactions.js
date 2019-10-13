@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { connect } from 'react-redux';
 import { v4 } from 'uuid';
 import { addTransaction as actionAddTransaction } from '../actions';
+import { getCategories } from '../api/categories';
 import Layout from './Layout';
 import Button from './Button';
 import Input from './Input';
@@ -38,8 +39,17 @@ class Transactions extends Component {
       amount: 0,
       date: JSON.stringify(new Date()).slice(1, 11),
       description: '',
-      category: ['Food', 'Church', 'Transport']
+      categories: [],
+      loading: true
     };
+  }
+
+  async componentDidMount() {
+    const categories = await getCategories();
+    this.setState({
+      categories,
+      loading: false
+    });
   }
 
   handleSubmit = values => {
@@ -48,7 +58,7 @@ class Transactions extends Component {
   };
 
   render() {
-    const { description, category, amount, date } = this.state;
+    const { description, categories, amount, date, loading } = this.state;
     const { transactions } = this.props;
     const { handleSubmit } = this;
     return (
@@ -80,41 +90,43 @@ class Transactions extends Component {
             </tbody>
           </Table.Table>
         </TransactionsRow>
-        <TransactionsRow>
-          <Formik
-            initialValues={{
-              description,
-              amount,
-              category: category[0],
-              date
-            }}
-            validationSchema={schema}
-            onSubmit={(values, actions) => {
-              handleSubmit(values);
-              actions.setSubmitting(false);
-            }}
-            render={({ isSubmitting }) => (
-              <Form>
-                <Field
-                  name="description"
-                  placeholder="Enter Description"
-                  component={Input}
-                />
-                <Field type="number" name="amount" component={Input} />
-                <Field type="date" name="date" component={Input} />
-                <Field
-                  name="category"
-                  component={Select}
-                  placeholder="Select Category"
-                  options={category}
-                />
-                <Button type="submit" disabled={isSubmitting}>
-                  Submit
-                </Button>
-              </Form>
-            )}
-          />
-        </TransactionsRow>
+        {!loading && (
+          <TransactionsRow>
+            <Formik
+              initialValues={{
+                description,
+                amount,
+                category: categories[0],
+                date
+              }}
+              validationSchema={schema}
+              onSubmit={(values, actions) => {
+                handleSubmit(values);
+                actions.setSubmitting(false);
+              }}
+              render={({ isSubmitting }) => (
+                <Form>
+                  <Field
+                    name="description"
+                    placeholder="Enter Description"
+                    component={Input}
+                  />
+                  <Field type="number" name="amount" component={Input} />
+                  <Field type="date" name="date" component={Input} />
+                  <Field
+                    name="category"
+                    component={Select}
+                    placeholder="Select Category"
+                    options={categories}
+                  />
+                  <Button type="submit" disabled={isSubmitting}>
+                    Submit
+                  </Button>
+                </Form>
+              )}
+            />
+          </TransactionsRow>
+        )}
       </Layout>
     );
   }

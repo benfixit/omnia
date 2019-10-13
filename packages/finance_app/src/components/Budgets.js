@@ -6,8 +6,10 @@ import { v4 } from 'uuid';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { addBudget as actionAddBudget } from '../actions';
+import { getCategories } from '../api/categories';
 import Layout from './Layout';
 import Button from './Button';
+import Select from './Select';
 import Input from './Input';
 import { Layout as LayoutStyle, Table, Heading } from '../styles';
 
@@ -29,19 +31,27 @@ class Budgets extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      category: 'Food',
-      budget: 1000
+      categories: [],
+      budget: 1000,
+      loading: true
     };
+  }
+
+  async componentDidMount() {
+    const categories = await getCategories();
+    this.setState({
+      categories,
+      loading: false
+    });
   }
 
   handleSubmit = values => {
     const { addBudget } = this.props;
-    console.log('Values::: ', values);
     addBudget(values);
   };
 
   render() {
-    const { category, budget } = this.state;
+    const { categories, budget, loading } = this.state;
     const { budgets } = this.props;
     const { handleSubmit } = this;
     return (
@@ -73,29 +83,32 @@ class Budgets extends Component {
             </tbody>
           </Table.Table>
         </BudgetsRow>
-        <BudgetsRow>
-          <Formik
-            initialValues={{ category, budget }}
-            onSubmit={(values, actions) => {
-              handleSubmit(values);
-              actions.setSubmitting(false);
-            }}
-            validationSchema={schema}
-            render={({ isSubmitting }) => (
-              <Form>
-                <Field
-                  name="category"
-                  placeholder="Enter Description"
-                  component={Input}
-                />
-                <Field type="number" name="budget" component={Input} />
-                <Button type="submit" disabled={isSubmitting}>
-                  Submit
-                </Button>
-              </Form>
-            )}
-          />
-        </BudgetsRow>
+        {!loading && (
+          <BudgetsRow>
+            <Formik
+              initialValues={{ category: categories[0], budget }}
+              onSubmit={(values, actions) => {
+                handleSubmit(values);
+                actions.setSubmitting(false);
+              }}
+              validationSchema={schema}
+              render={({ isSubmitting }) => (
+                <Form>
+                  <Field
+                    name="category"
+                    component={Select}
+                    placeholder="Select Category"
+                    options={categories}
+                  />
+                  <Field type="number" name="budget" component={Input} />
+                  <Button type="submit" disabled={isSubmitting}>
+                    Submit
+                  </Button>
+                </Form>
+              )}
+            />
+          </BudgetsRow>
+        )}
       </Layout>
     );
   }
