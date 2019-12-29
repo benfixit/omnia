@@ -24,15 +24,6 @@ export const removeTransaction = payload => {
   };
 };
 
-export const addBudget = payload => {
-  return {
-    type: ADD_BUDGET,
-    id: v4(),
-    budget: payload.budget,
-    category: payload.category
-  };
-};
-
 export const removeBudget = payload => {
   return {
     type: REMOVE_BUDGET,

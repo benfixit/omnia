@@ -14,8 +14,17 @@ const Table = styled.table`
 
 const Td = styled.td`
   border: thin solid #888888;
-  padding: 5px 2px;
-  text-align: left;
+  padding: 5px;
+  text-align: right;
+  color: ${props => {
+    if (props.status === 'negative') {
+      return '#990000';
+    }
+    if (props.status === 'positive') {
+      return '#009900';
+    }
+    return '';
+  }};
 `;
 
 const Th = styled.th`
@@ -23,7 +32,7 @@ const Th = styled.th`
   background-color: #a09280;
   color: white;
   padding: 5px 2px;
-  text-align: left;
+  text-align: center;
 `;
 
 export { Table, Td, Th };

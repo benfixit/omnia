@@ -1,35 +1,21 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { Formik, Field, Form } from 'formik';
-import * as Yup from 'yup';
-import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { v4 } from 'uuid';
-import { addTransaction as actionAddTransaction } from '../actions';
-import { getCategories } from '../api/categories';
+import { graphql, Query } from 'react-apollo';
+import compose from 'lodash/fp/compose';
+import { GET_CATEGORIES } from '../graphql/categories';
+import { GET_TRANSACTIONS, ADD_TRANSACTION } from '../graphql/transactions';
 import Layout from './Layout';
 import Button from './Button';
-import Input from './Input';
-import Select from './Select';
 import { Layout as LayoutStyle, Table, Heading } from '../styles';
+import { monthsOfYear } from '../utils/date';
 
 const TransactionsRow = styled(LayoutStyle.Row)`
   justify-content: center;
   padding: 15px 10px;
 `;
-
-const schema = Yup.object().shape({
-  description: Yup.string()
-    .min(3, 'Too short!')
-    .required('Required'),
-  amount: Yup.number().required('Required'),
-  date: Yup.date()
-    .required('Required')
-    .default(() => {
-      return new Date();
-    }),
-  category: Yup.string().required('Required')
-});
 
 class Transactions extends Component {
   constructor(props) {
@@ -38,122 +24,184 @@ class Transactions extends Component {
     this.state = {
       amount: 0,
       date: JSON.stringify(new Date()).slice(1, 11),
-      description: '',
-      categories: [],
-      loading: true
+      category: '',
+      description: ''
     };
   }
 
-  async componentDidMount() {
-    const categories = await getCategories();
+  handleChange = event => {
+    const {
+      target: { name, value }
+    } = event;
     this.setState({
-      categories,
-      loading: false
+      [name]: value
     });
-  }
+  };
 
-  handleSubmit = values => {
-    const { addTransaction } = this.props;
-    addTransaction(values);
+  handleSubmit = event => {
+    event.preventDefault();
+    const { amount, description, category } = this.state;
+
+    const { mutate } = this.props;
+    mutate({
+      variables: {
+        amount: Number(amount),
+        description,
+        category
+      },
+      refetchQueries: [
+        {
+          query: GET_TRANSACTIONS
+        }
+      ]
+    });
   };
 
   render() {
-    const { description, categories, amount, date, loading } = this.state;
-    const { transactions } = this.props;
-    const { handleSubmit } = this;
+    const { description, amount, category, date } = this.state;
+    const { handleChange, handleSubmit } = this;
+    const dateParam = new Date();
+    const defaultYear = dateParam.getFullYear();
+    const {
+      match: {
+        params: { year = defaultYear, month }
+      }
+    } = this.props;
+    const monthIndex = monthsOfYear[month] || dateParam.getMonth();
     return (
       <Layout>
         <TransactionsRow>
           <Heading.H1>Transactions</Heading.H1>
         </TransactionsRow>
-        <TransactionsRow>
-          <Table.Table>
-            <thead>
-              <tr>
-                <Table.Th>Date</Table.Th>
-                <Table.Th>Description</Table.Th>
-                <Table.Th>Category</Table.Th>
-                <Table.Th>Amount</Table.Th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map(transaction => {
-                return (
-                  <tr key={v4()}>
-                    <Table.Td>{transaction.date}</Table.Td>
-                    <Table.Td>{transaction.description}</Table.Td>
-                    <Table.Td>{transaction.category}</Table.Td>
-                    <Table.Td>{transaction.amount}</Table.Td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table.Table>
-        </TransactionsRow>
-        {!loading && (
-          <TransactionsRow>
-            <Formik
-              initialValues={{
-                description,
-                amount,
-                category: categories[0],
-                date
-              }}
-              validationSchema={schema}
-              onSubmit={(values, actions) => {
-                handleSubmit(values);
-                actions.setSubmitting(false);
-              }}
-              render={({ isSubmitting }) => (
-                <Form>
-                  <Field
-                    name="description"
-                    placeholder="Enter Description"
-                    component={Input}
-                  />
-                  <Field type="number" name="amount" component={Input} />
-                  <Field type="date" name="date" component={Input} />
-                  <Field
-                    name="category"
-                    component={Select}
-                    placeholder="Select Category"
-                    options={categories}
-                  />
-                  <Button type="submit" disabled={isSubmitting}>
-                    Submit
-                  </Button>
-                </Form>
-              )}
-            />
-          </TransactionsRow>
-        )}
+        <Query query={GET_CATEGORIES}>
+          {({
+            data: categoriesData,
+            error: categoriesError,
+            loading: categoriesLoading
+          }) => {
+            if (categoriesLoading) return <h2>Loading...</h2>;
+            if (categoriesError) return <h2>Error :(</h2>;
+            const { categories } = categoriesData;
+            return (
+              <>
+                <TransactionsRow>
+                  <Query
+                    query={GET_TRANSACTIONS}
+                    variables={{
+                      year: Number(year),
+                      month: Number(monthIndex)
+                    }}
+                  >
+                    {({
+                      data: transactionsData,
+                      loading: transactionsLoading,
+                      error: transactionsError
+                    }) => {
+                      if (transactionsLoading) return <span>Loading...</span>;
+                      if (transactionsError) return <span>Error :(</span>;
+                      const { transactions } = transactionsData;
+                      return (
+                        <Table.Table>
+                          <thead>
+                            <tr>
+                              <Table.Th>Date</Table.Th>
+                              <Table.Th>Description</Table.Th>
+                              <Table.Th>Category</Table.Th>
+                              <Table.Th>Amount</Table.Th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {transactions.map(transaction => {
+                              const transactionDate = new Date(
+                                Number(transaction.createdAt)
+                              );
+                              return (
+                                <tr key={v4()}>
+                                  <Table.Td>
+                                    {transactionDate.toLocaleDateString()}
+                                  </Table.Td>
+                                  <Table.Td>{transaction.description}</Table.Td>
+                                  <Table.Td>
+                                    {transaction.category.title}
+                                  </Table.Td>
+                                  <Table.Td>{transaction.amount}</Table.Td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </Table.Table>
+                      );
+                    }}
+                  </Query>
+                </TransactionsRow>
+                <TransactionsRow>
+                  <form onSubmit={handleSubmit}>
+                    <select
+                      name="category"
+                      onChange={handleChange}
+                      value={category}
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map(item => {
+                        const { _id: id, title } = item;
+                        return (
+                          <option value={id} key={id}>
+                            {title}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <input
+                      type="number"
+                      name="amount"
+                      value={amount}
+                      onChange={handleChange}
+                    />
+                    <input
+                      type="date"
+                      name="date"
+                      value={date}
+                      onChange={handleChange}
+                    />
+                    <input
+                      type="text"
+                      name="description"
+                      value={description}
+                      onChange={handleChange}
+                    />
+                    <Button type="submit">Submit</Button>
+                  </form>
+                </TransactionsRow>
+              </>
+            );
+          }}
+        </Query>
       </Layout>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    transactions: state.transactions
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    addTransaction: payload => dispatch(actionAddTransaction(payload))
-  };
-};
-
 Transactions.propTypes = {
-  transactions: PropTypes.instanceOf(Array),
-  addTransaction: PropTypes.func.isRequired
+  categoryList: PropTypes.shape({
+    categories: PropTypes.array
+  }),
+  transactionList: PropTypes.shape({
+    transactions: PropTypes.array
+  }),
+  mutate: PropTypes.func,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      year: PropTypes.string,
+      month: PropTypes.string
+    })
+  })
 };
 
 Transactions.defaultProps = {
-  transactions: []
+  categoryList: {},
+  transactionList: {},
+  mutate: () => {},
+  match: {}
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Transactions);
+export default compose(graphql(ADD_TRANSACTION), withRouter)(Transactions);

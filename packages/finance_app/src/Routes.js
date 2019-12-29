@@ -8,11 +8,11 @@ const Transactions = lazy(() => import('./components/Transactions'));
 const Routes = () => {
   return (
     <BrowserRouter>
-      <Suspense fallback={<div>Loading</div>}>
+      <Suspense fallback={<div>Loading...</div>}>
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/budgets" component={Budgets} />
-          <Route path="/transactions" component={Transactions} />
+          <Route path="/budgets/:year?/:month?" component={Budgets} />
+          <Route path="/transactions/:year?/:month?" component={Transactions} />
         </Switch>
       </Suspense>
     </BrowserRouter>

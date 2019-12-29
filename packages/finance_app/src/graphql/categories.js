@@ -1,9 +1,11 @@
 /* eslint-disable import/prefer-default-export */
-export const GET_CATEGORIES = `
-    {
-        categories{
-            _id
-            title
-          }
+import gql from 'graphql-tag';
+
+export const GET_CATEGORIES = gql`
+  query CategoryList {
+    categories {
+      _id
+      title
     }
+  }
 `;

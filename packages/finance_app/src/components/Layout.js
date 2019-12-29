@@ -44,14 +44,14 @@ const LowerNavLink = styled(NavLink)`
 const Layout = props => {
   const {
     children,
-    match: { path }
+    match: { url }
   } = props;
-  const root = path.slice(1);
+  const root = url.slice(1).split('/')[0];
   return (
     <LayoutStyle.Container>
       <NavRow>
         <NavH1>
-          <NavLink to="/">Finance App</NavLink>
+          <NavLink to="/">Personal App</NavLink>
         </NavH1>
         <NavUl>
           <NavLink to="/">Home</NavLink>
@@ -61,8 +61,11 @@ const Layout = props => {
       </NavRow>
       <LowerNavRow>
         <NavUl>
-          {monthsOfYear.map(month => (
-            <LowerNavLink key={v4()} to={`/${root}/${month.toLowerCase()}`}>
+          {Object.keys(monthsOfYear).map(month => (
+            <LowerNavLink
+              key={v4()}
+              to={`/${root}/2019/${month.toLowerCase()}`}
+            >
               {month}
             </LowerNavLink>
           ))}
@@ -76,7 +79,7 @@ const Layout = props => {
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
   match: PropTypes.shape({
-    path: PropTypes.string
+    url: PropTypes.string
   }).isRequired
 };
 

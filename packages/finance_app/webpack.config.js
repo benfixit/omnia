@@ -32,7 +32,7 @@ module.exports = {
   },
   plugins: [
     new HTMLWebpackPlugin({
-      title: 'Finance App',
+      title: 'Personal App',
       template: path.resolve('./src/index.html')
     }),
     new CleanWebpackPlugin()
