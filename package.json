@@ -1,6 +1,10 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "start:expense": "cd packages/expense_tracker && yarn start",
+    "start:picasso": "cd packages/picasso && yarn start"
+  },
   "devDependencies": {
     "lerna": "^3.14.1"
   }
