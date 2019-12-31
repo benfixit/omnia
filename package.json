@@ -1,9 +1,10 @@
 {
-  "name": "root",
+  "name": "@omnia/omnia",
   "private": true,
   "scripts": {
     "start:expense": "cd packages/expense_tracker && yarn start",
-    "start:picasso": "cd packages/picasso && yarn start"
+    "start:picasso": "cd packages/picasso && yarn start",
+    "build:picasso": "cd packages/picasso && yarn build"
   },
   "devDependencies": {
     "lerna": "^3.14.1"

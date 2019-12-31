@@ -31,7 +31,7 @@ const StyledButton = styled.button`
 
 const Button = props => {
   const { children, ...rest } = props;
-  return <StyledButton {...rest}>{children}</StyledButton>;
+  return <StyledButton {...rest}>Test</StyledButton>;
 };
 
 export default Button;
