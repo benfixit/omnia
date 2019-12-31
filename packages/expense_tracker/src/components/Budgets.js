@@ -5,12 +5,12 @@ import { withRouter } from 'react-router';
 import { v4 } from 'uuid';
 import { graphql, Query } from 'react-apollo';
 import compose from 'lodash/fp/compose';
+import { Button } from '@omnia/picasso';
 import { monthsOfYear } from '../utils/date';
 import { GET_CATEGORIES } from '../graphql/categories';
 import { ADD_BUDGET, GET_BUDGETS } from '../graphql/budgets';
 import { GET_TRANSACTIONS } from '../graphql/transactions';
 import Layout from './Layout';
-import Button from './Button';
 import { Layout as LayoutStyle, Table, Heading } from '../styles';
 
 const BudgetsRow = styled(LayoutStyle.Row)`
