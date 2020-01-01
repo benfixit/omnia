@@ -13,9 +13,7 @@ import { GET_TRANSACTIONS } from '../graphql/transactions';
 import Layout from './Layout';
 import { Layout as LayoutStyle, Table, Heading } from '../styles';
 
-const { Button } = Picasso;
-
-console.log('Button === ', Picasso);
+const { Button, Input } = Picasso;
 
 const BudgetsRow = styled(LayoutStyle.Row)`
   justify-content: center;
@@ -249,7 +247,7 @@ class Budgets extends Component {
                                     );
                                   })}
                                 </select>
-                                <input
+                                <Input
                                   type="number"
                                   name="amount"
                                   value={amount}
