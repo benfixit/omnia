@@ -1,4 +1,6 @@
-import Button from "./src/Button";
-import theme from "./src/theme";
+import Button from './src/Button';
+import theme from './src/theme';
 
-export { Button, theme };
+const Picasso = { Button, theme };
+
+export default Picasso;

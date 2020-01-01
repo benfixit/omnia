@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/chukwuemekainya/.nvm/versions/node/v10.15.2/bin/node /Users/chukwuemekainya/.yarn/bin/yarn.js add @omnia/picasso
+  /Users/chukwuemekainya/.nvm/versions/node/v10.15.2/bin/node /Users/chukwuemekainya/.yarn/bin/yarn.js list lodash
 
 PATH: 
   /Users/chukwuemekainya/.nvm/versions/node/v10.15.2/bin:/usr/local/opt/elasticsearch@5.6/bin:/Users/chukwuemekainya/.jenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.composer/vendor/bin:/usr/local/bin/php:/usr/local/opt/php@7.2/bin:/usr/local/opt/php@7.2/sbin:/Applications/VMware Fusion.app/Contents/Public:/Users/chukwuemekainya/omnia/node_modules/.bin:/Users/chukwuemekainya/Library/Android/sdk/emulator:/Users/chukwuemekainya/Library/Android/sdk/tools:/Users/chukwuemekainya/Library/Android/sdk/tools/bin:/Users/chukwuemekainya/Library/Android/sdk/platform-tools:~/.composer/vendor/bin:~/Library/Python/2.7/bin:/Users/chukwuemekainya/.yarn/bin

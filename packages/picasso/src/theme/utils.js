@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get } from 'lodash';
 
 const themeGet = (path, fallback = null) => props => {
   return get(props.theme, path, fallback);

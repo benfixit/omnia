@@ -36,5 +36,8 @@ module.exports = {
       template: path.resolve('./src/index.html')
     }),
     new CleanWebpackPlugin()
-  ]
+  ],
+  resolve: {
+    symlinks: false
+  }
 };
