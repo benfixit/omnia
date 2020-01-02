@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import themeGet from '../theme/utils';
+import withValue from '../hoc/withValue';
 
 const StyledInput = styled.input`
   padding: ${themeGet('space.2')};
@@ -20,18 +20,8 @@ const Input = props => {
   return <StyledInput {...props} />;
 };
 
-Input.propTypes = {
-  valueProps: PropTypes.shape({
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    set: PropTypes.func
-  })
-};
+const InputWithValue = withValue('string', Input);
 
-Input.defaultProps = {
-  valueProps: {
-    value: '',
-    set: () => {}
-  }
-};
+export { InputWithValue };
 
 export default Input;

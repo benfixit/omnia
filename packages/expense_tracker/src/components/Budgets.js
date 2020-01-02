@@ -248,7 +248,6 @@ class Budgets extends Component {
                                   })}
                                 </select>
                                 <Input
-                                  type="number"
                                   name="amount"
                                   value={amount}
                                   onChange={handleChange}

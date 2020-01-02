@@ -1,10 +1,8 @@
 import Button from './src/Button';
-import Input from './src/Input';
+import CheckBox from './src/Checkbox';
+import Input, { InputWithValue } from './src/Input';
 import theme from './src/theme';
-import withValue from './src/hoc/withValue';
 
-const InputWithValue = withValue('string', Input);
-
-const Picasso = { Button, Input, InputWithValue, theme };
+const Picasso = { Button, CheckBox, Input, InputWithValue, theme };
 
 export default Picasso;

@@ -9,6 +9,8 @@ const valueMap = {
   any: Value
 };
 
+export const ValueContext = React.createContext({});
+
 const withValue = (valueType, EnhancedComponent) => {
   const ValueWrapper = valueMap[valueType] || valueMap.any;
   const WithValue = props => {
@@ -26,13 +28,15 @@ const withValue = (valueType, EnhancedComponent) => {
         disabled={disabled}
         onChange={onChange}
       >
-        {({ value: inputValue, set }) => {
+        {valueProps => {
           return (
-            <EnhancedComponent
-              {...componentProps}
-              value={inputValue}
-              onChange={event => set(event.target.value)}
-            />
+            <ValueContext.Provider value={valueProps}>
+              <EnhancedComponent
+                {...componentProps}
+                value={valueProps.value}
+                onChange={event => valueProps.set(event.target.value)}
+              />
+            </ValueContext.Provider>
           );
         }}
       </ValueWrapper>
@@ -40,8 +44,8 @@ const withValue = (valueType, EnhancedComponent) => {
   };
 
   WithValue.defaultProps = {
-    value: '',
-    defaultValue: '',
+    value: undefined,
+    defaultValue: undefined,
     onChange: () => {},
     disabled: false
   };
