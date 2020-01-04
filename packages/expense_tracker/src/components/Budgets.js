@@ -54,6 +54,15 @@ class Budgets extends Component {
     });
   };
 
+  handleCheck = event => {
+    const {
+      target: { name, checked }
+    } = event;
+    this.setState({
+      [name]: checked
+    });
+  };
+
   handleSubmit = event => {
     event.preventDefault();
     const { amount, category } = this.state;

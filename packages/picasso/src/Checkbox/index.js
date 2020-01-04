@@ -4,6 +4,15 @@ import styled from 'styled-components';
 
 import themeGet from '../theme/utils';
 import withValue, { ValueContext } from '../hoc/withValue';
+import withArrayOf, { ArrayContext } from '../hoc/withArrayOf';
+
+const CheckBoxContainer = styled.label`
+  display: flex;
+  cursor: pointer;
+  user-select: none;
+  color: ${themeGet('colors.primary')};
+  margin: ${themeGet('space.3')} ${themeGet('space.0 ')};
+`;
 
 const Icon = styled.svg`
   fill: none;
@@ -27,19 +36,21 @@ const StyledCheckBox = styled.div`
   background-color: ${props =>
     props.checked ? themeGet('colors.primary') : themeGet('colors.white')};
   position: relative;
+  margin-right: ${themeGet('space.3')};
 `;
 
 const CheckBox = props => {
-  const { checked } = props;
+  const { checked, description } = props;
   return (
-    <>
+    <CheckBoxContainer>
       <StyledCheckBox checked={checked}>
         <HiddenCheckBox {...props} />
         <Icon viewBox="0 0 24 24">
           <polyline points="20 6 9 17 4 12" />
         </Icon>
       </StyledCheckBox>
-    </>
+      <span>{description}</span>
+    </CheckBoxContainer>
   );
 };
 
@@ -51,14 +62,26 @@ const CheckBoxWithValue = withValue('boolean', props => (
   </ValueContext.Consumer>
 ));
 
-export { CheckBoxWithValue };
+const CheckBoxArray = withArrayOf(props => (
+  <ArrayContext.Consumer>
+    {() => {
+      // console.log('Context Values === ', value);
+      // console.log('Props Values === ', props);
+      const { checked, description } = props;
+      return <CheckBox checked={checked} description={description} />;
+    }}
+  </ArrayContext.Consumer>
+));
+
+export { CheckBoxWithValue, CheckBoxArray };
 
 CheckBox.propTypes = {
-  checked: PropTypes.bool
+  checked: PropTypes.bool.isRequired,
+  description: PropTypes.string
 };
 
 CheckBox.defaultProps = {
-  checked: false
+  description: ''
 };
 
 export default CheckBox;

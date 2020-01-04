@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { BooleanValue, StringValue, Value } from 'react-values';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 
+import getDisplayName from '../utils/displayName';
+
 const valueMap = {
   string: StringValue,
   boolean: BooleanValue,
@@ -56,6 +58,8 @@ const withValue = (valueType, EnhancedComponent) => {
     onChange: PropTypes.func,
     disabled: PropTypes.bool
   };
+
+  WithValue.displayName = `WithValue(${getDisplayName(EnhancedComponent)})`;
 
   return hoistNonReactStatics(WithValue, EnhancedComponent);
 };

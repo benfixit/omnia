@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CheckBox, { CheckBoxWithValue } from './index';
+import CheckBox, { CheckBoxWithValue, CheckBoxArray } from './index';
 
 export default {
   title: 'CheckBox',
@@ -16,11 +16,22 @@ export const BasicCheckBox = () => {
     <CheckBox
       name="checkbox"
       checked={checked}
+      description="Checkbox"
       onChange={event => handleChange(event, setChecked)}
     />
   );
 };
 
 export const BasicCheckBoxWithValue = () => (
-  <CheckBoxWithValue name="checkboxWithValue" />
+  <CheckBoxWithValue
+    name="checkboxWithValue"
+    description="Checkbox with value"
+  />
+);
+
+export const BasicCheckBoxArray = () => (
+  <CheckBoxArray defaultValue={['food', 'sport']}>
+    <CheckBoxArray.Item name="food" description="Food" />
+    <CheckBoxArray.Item name="sport" description="Sport" />
+  </CheckBoxArray>
 );
