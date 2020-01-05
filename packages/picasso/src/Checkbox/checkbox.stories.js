@@ -30,8 +30,9 @@ export const BasicCheckBoxWithValue = () => (
 );
 
 export const BasicCheckBoxArray = () => (
-  <CheckBoxArray defaultValue={['food', 'sport']}>
+  <CheckBoxArray defaultValue={new Set(['food', 'sport'])}>
     <CheckBoxArray.Item name="food" description="Food" />
     <CheckBoxArray.Item name="sport" description="Sport" />
+    <CheckBoxArray.Item name="work" description="Work" />
   </CheckBoxArray>
 );

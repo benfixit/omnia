@@ -2,24 +2,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import hoistNonReactStatics from 'hoist-non-react-statics';
-import { ArrayValue } from 'react-values';
+import { SetValue } from 'react-values';
 
 import getDisplayName from '../utils/displayName';
 
 export const ArrayContext = React.createContext({});
 
-const withArrayOf = EnhancedComponent => {
-  const WithArrayOf = props => {
+const withSetOf = EnhancedComponent => {
+  const WithSetOf = props => {
     const { children, value, defaultValue, onChange, disabled } = props;
     return (
-      <ArrayValue
+      <SetValue
         value={value}
         defaultValue={defaultValue}
         onChange={onChange}
         disabled={disabled}
       >
         {valueProps => {
-          // console.log('Inputed Values === ', valueProps.value);
           return (
             <ArrayContext.Provider value={valueProps}>
               {React.Children.map(children, (child, index) => {
@@ -30,15 +29,15 @@ const withArrayOf = EnhancedComponent => {
             </ArrayContext.Provider>
           );
         }}
-      </ArrayValue>
+      </SetValue>
     );
   };
 
-  WithArrayOf.Item = EnhancedComponent;
+  WithSetOf.Item = EnhancedComponent;
 
-  WithArrayOf.displayName = `WithValue(${getDisplayName(EnhancedComponent)})`;
+  WithSetOf.displayName = `WithSetOf(${getDisplayName(EnhancedComponent)})`;
 
-  WithArrayOf.defaultProps = {
+  WithSetOf.defaultProps = {
     value: undefined,
     defaultValue: undefined,
     onChange: () => {},
@@ -46,15 +45,15 @@ const withArrayOf = EnhancedComponent => {
     children: []
   };
 
-  WithArrayOf.propTypes = {
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  WithSetOf.propTypes = {
+    value: PropTypes.shape(new Set()),
+    defaultValue: PropTypes.shape(new Set()),
     onChange: PropTypes.func,
     disabled: PropTypes.bool,
-    children: PropTypes.shape({})
+    children: PropTypes.arrayOf(PropTypes.shape({}))
   };
 
-  return hoistNonReactStatics(WithArrayOf, EnhancedComponent);
+  return hoistNonReactStatics(WithSetOf, EnhancedComponent);
 };
 
-export default withArrayOf;
+export default withSetOf;

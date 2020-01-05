@@ -7,6 +7,7 @@ const Picasso = {
   Button,
   CheckBox,
   CheckBoxWithValue,
+  CheckBoxArray,
   Input,
   InputWithValue,
   theme

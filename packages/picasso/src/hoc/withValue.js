@@ -53,8 +53,16 @@ const withValue = (valueType, EnhancedComponent) => {
   };
 
   WithValue.propTypes = {
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.bool
+    ]),
+    defaultValue: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.bool
+    ]),
     onChange: PropTypes.func,
     disabled: PropTypes.bool
   };

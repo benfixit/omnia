@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import themeGet from '../theme/utils';
 import withValue, { ValueContext } from '../hoc/withValue';
-import withArrayOf, { ArrayContext } from '../hoc/withArrayOf';
+import withSetOf, { ArrayContext } from '../hoc/withSetOf';
 
 const CheckBoxContainer = styled.label`
   display: flex;
@@ -62,13 +62,17 @@ const CheckBoxWithValue = withValue('boolean', props => (
   </ValueContext.Consumer>
 ));
 
-const CheckBoxArray = withArrayOf(props => (
+const CheckBoxArray = withSetOf(props => (
   <ArrayContext.Consumer>
-    {() => {
-      // console.log('Context Values === ', value);
-      // console.log('Props Values === ', props);
-      const { checked, description } = props;
-      return <CheckBox checked={checked} description={description} />;
+    {({ value: setValue, add, remove }) => {
+      const { name, description } = props;
+      return (
+        <CheckBoxWithValue
+          value={setValue.has(name)}
+          description={description}
+          onChange={value => (value ? add(name) : remove(name))}
+        />
+      );
     }}
   </ArrayContext.Consumer>
 ));
