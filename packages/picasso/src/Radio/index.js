@@ -10,12 +10,12 @@ import {
 import withValue, { ValueContext } from '../hoc/withValue';
 import withSetOf, { ArrayContext } from '../hoc/withSetOf';
 
-const CheckBox = props => {
+const Radio = props => {
   const { checked, description } = props;
   return (
     <Container>
-      <StyledElement checked={checked} type="checkbox">
-        <HiddenElement {...props} type="checkbox" />
+      <StyledElement checked={checked} type="radio">
+        <HiddenElement {...props} type="radio" />
         <Icon />
       </StyledElement>
       <span>{description}</span>
@@ -23,39 +23,44 @@ const CheckBox = props => {
   );
 };
 
-const CheckBoxWithValue = withValue('boolean', props => (
+const RadioWithValue = withValue('boolean', props => (
   <ValueContext.Consumer>
-    {({ value, toggle }) => {
-      return <CheckBox {...props} checked={value} onChange={toggle} />;
+    {({ value, set }) => {
+      return (
+        <Radio
+          {...props}
+          checked={value}
+          onChange={event => set(event.target.checked)}
+        />
+      );
     }}
   </ValueContext.Consumer>
 ));
 
-const CheckBoxArray = withSetOf(props => (
+const RadioArray = withSetOf(props => (
   <ArrayContext.Consumer>
-    {({ value: setValue, add, remove }) => {
+    {({ value: setValue, set }) => {
       const { name } = props;
       return (
-        <CheckBoxWithValue
-          value={setValue.has(name)}
-          name={name}
+        <RadioWithValue
           {...props}
-          onChange={value => (value ? add(name) : remove(name))}
+          value={setValue.has(name)}
+          onChange={value => (value ? set(new Set([name])) : null)}
         />
       );
     }}
   </ArrayContext.Consumer>
 ));
 
-export { CheckBoxWithValue, CheckBoxArray };
+export { RadioWithValue, RadioArray };
 
-CheckBox.propTypes = {
+Radio.propTypes = {
   checked: PropTypes.bool.isRequired,
   description: PropTypes.string
 };
 
-CheckBox.defaultProps = {
+Radio.defaultProps = {
   description: ''
 };
 
-export default CheckBox;
+export default Radio;
