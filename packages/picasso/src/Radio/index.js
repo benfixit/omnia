@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Text from '../Text';
 import {
   Container,
   Icon,
@@ -18,7 +19,7 @@ const Radio = props => {
         <HiddenElement {...props} type="radio" />
         <Icon />
       </StyledElement>
-      <span>{description}</span>
+      <Text as="span">{description}</Text>
     </Container>
   );
 };

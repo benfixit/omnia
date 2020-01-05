@@ -2,6 +2,23 @@ const space = ['0px', '2px', '4px', '8px', '16px', '32px', '64px'];
 
 const fontSizes = ['12px', '14px', '16px', '18px', '20px', '24px', '34px'];
 
+const fonts = {
+  sansSerif: '"Helvetica Neue", Arial, Helvetica, sans-serif'
+};
+
+const fontWeights = [
+  0, // Placeholder
+  100, // Thin
+  200, // Extra Light
+  300, // Light
+  400, // Normal
+  500, // Medium
+  600, // Semi Bold
+  700, // Bold
+  800, // Extra Bold
+  900 // Ultra Bold
+];
+
 const colors = {
   primary: '#3498db',
   hoveredPrimary: '#2980b9',
@@ -16,7 +33,9 @@ const colors = {
 const theme = {
   space,
   colors,
-  fontSizes
+  fontSizes,
+  fonts,
+  fontWeights
 };
 
 export default theme;
