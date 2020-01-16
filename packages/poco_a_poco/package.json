@@ -1,0 +1,18 @@
+{
+  "name": "@omnia/poco_a_poco",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Inya Chukwuemeka",
+  "private": true,
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "keywords": [
+    "Objectives",
+    "Key Results"
+  ],
+  "dependencies": {
+    "@omnia/picasso": "^1.0.0"
+  }
+}
