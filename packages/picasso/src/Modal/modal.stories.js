@@ -7,11 +7,15 @@ export default {
   component: Modal
 };
 
+const handleClose = setShow => {
+  setShow(false);
+};
+
 export const BasicModal = () => {
   const [show, setShow] = useState(false);
   return (
     <>
-      <Modal show={show}>
+      <Modal show={show} onClose={() => handleClose(setShow)}>
         <h1>Welcome Here</h1>
         <p>Some random content!!!</p>
       </Modal>

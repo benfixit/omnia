@@ -1,9 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import Button from '../Button';
+import themeGet from '../theme/utils';
 
 const modalRoot = document.getElementById('docs-root');
+
+const containerLanding = keyframes`
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0px;
+    opacity: 1;
+  }
+`;
 
 const BackDrop = styled.div`
   display: ${props => (props.show ? 'flex' : 'none')};
@@ -14,22 +27,28 @@ const BackDrop = styled.div`
   position: fixed;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 900;
 `;
 
 const Container = styled.div`
+  position: relative;
+  margin: 0 auto;
   width: 80%;
-  height: 80%;
-  background: white;
-  border: thin solid red;
+  background: ${themeGet('colors.white')};
+  border: thin solid ${themeGet('colors.gray')};
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  animation: ${containerLanding} 0.5s;
 `;
 
 const ModalFrame = props => {
-  const { children, show } = props;
+  const { children, show, onClose } = props;
   return (
     <BackDrop show={show}>
-      <Container>{children}</Container>
+      <Container>
+        {children}
+        <Button onClick={onClose}>Close</Button>
+      </Container>
     </BackDrop>
   );
 };
@@ -49,16 +68,11 @@ class Modal extends React.Component {
     modalRoot.removeChild(this.wrapper);
   }
 
-  handleClose = () => {
-    const { onClose } = this.props;
-    onClose();
-  };
-
   render() {
-    const { children, show } = this.props;
-    const { wrapper, handleClose } = this;
+    const { children, show, onClose } = this.props;
+    const { wrapper } = this;
     return ReactDOM.createPortal(
-      <ModalFrame show={show} onClose={handleClose}>
+      <ModalFrame show={show} onClose={onClose}>
         {children}
       </ModalFrame>,
       wrapper
@@ -68,11 +82,13 @@ class Modal extends React.Component {
 
 ModalFrame.propTypes = {
   children: PropTypes.node.isRequired,
-  show: PropTypes.bool
+  show: PropTypes.bool,
+  onClose: PropTypes.func
 };
 
 ModalFrame.defaultProps = {
-  show: false
+  show: false,
+  onClose: () => {}
 };
 
 Modal.propTypes = {
