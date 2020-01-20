@@ -1,7 +1,8 @@
 import React from 'react';
+import Objectives from './components/Objectives';
 
 const App = () => {
-  return <h1>Welcome to the App.</h1>;
+  return <Objectives />;
 };
 
 export default App;

@@ -1,6 +1,7 @@
 import Button from './src/Button';
 import CheckBox, { CheckBoxWithValue, CheckBoxArray } from './src/Checkbox';
 import Input, { InputWithValue } from './src/Input';
+import List from './src/List';
 import theme from './src/theme';
 
 const Picasso = {
@@ -10,6 +11,7 @@ const Picasso = {
   CheckBoxArray,
   Input,
   InputWithValue,
+  List,
   theme
 };
 
