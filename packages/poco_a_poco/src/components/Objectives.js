@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Picasso from '@omnia/picasso';
 import { GET_OBJECTIVES } from '../graphql/objectives';
 
-const { Flex, Heading, Pane } = Picasso;
+const { Flex, Heading, Loading, Pane } = Picasso;
 
 const Container = styled(Pane)``;
 
@@ -32,7 +32,7 @@ const Objectives = () => {
         <StyledHeading>My Objectives</StyledHeading>
         <Query query={GET_OBJECTIVES}>
           {({ loading, error, data }) => {
-            if (loading) return 'Loading...';
+            if (loading) return <Loading />;
             if (error) return 'Error...';
             const { objectives } = data;
             return (
