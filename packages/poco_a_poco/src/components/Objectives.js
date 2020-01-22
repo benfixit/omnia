@@ -5,13 +5,13 @@ import styled from 'styled-components';
 import Picasso from '@omnia/picasso';
 import { GET_OBJECTIVES } from '../graphql/objectives';
 
-const { Flex, Heading, Loading, Pane } = Picasso;
+const { Flex, Heading, Loading, Pane, Text } = Picasso;
 
 const Container = styled(Pane)``;
 
 const Wrapper = styled(Pane)`
   flex-direction: column;
-  width: 50%;
+  width: 60%;
   margin: 0 auto;
 `;
 
@@ -19,7 +19,13 @@ const StyledList = styled(Pane)`
   flex-direction: column;
 `;
 
-const StyledItem = styled(Flex)``;
+const StyledItem = styled(Flex)`
+  margin-bottom: 16px;
+  border: thin solid #dddddd;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) 0 1px 2px rgba(0, 0, 0, 0.4);
+  height: 140px;
+`;
 
 const StyledHeading = styled(Heading)`
   font-size: 24px;
@@ -38,7 +44,10 @@ const Objectives = () => {
             return (
               <StyledList>
                 {objectives.map(objective => (
-                  <StyledItem key={v4()}>{objective.title}</StyledItem>
+                  <StyledItem key={v4()}>
+                    <Heading as="h3">{objective.title}</Heading>
+                    <Text>{objective.description}</Text>
+                  </StyledItem>
                 ))}
               </StyledList>
             );

@@ -7,7 +7,6 @@ const Flex = styled.div`
   margin: ${themeGet('space.0')};
   background: ${themeGet('colors.white')};
   box-sizing: border-box;
-  border: thin solid red;
 `;
 
 export default Flex;
