@@ -30,7 +30,9 @@ const colors = {
   hoveredDanger: '#b7312d',
   white: '#ffffff',
   lightBlue: '#5bc0de',
-  black: '#000000'
+  black: '#000000',
+  textDefault: '#222222',
+  textLabel: '#666666'
 };
 
 const theme = {

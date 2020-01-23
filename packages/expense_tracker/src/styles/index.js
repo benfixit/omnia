@@ -1,5 +1,5 @@
 import * as Layout from './layout';
-import * as Heading from './heading';
 import * as Table from './table';
+import { StyledForm, StyledButton } from './form';
 
-export { Layout, Heading, Table };
+export { Layout, Table, StyledForm, StyledButton };

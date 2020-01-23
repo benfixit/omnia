@@ -5,12 +5,19 @@ import { withRouter } from 'react-router';
 import { v4 } from 'uuid';
 import { graphql, Query } from 'react-apollo';
 import compose from 'lodash/fp/compose';
+import Picasso from '@omnia/picasso';
 import { GET_CATEGORIES } from '../graphql/categories';
 import { GET_TRANSACTIONS, ADD_TRANSACTION } from '../graphql/transactions';
 import Layout from './Layout';
-import Button from './Button';
-import { Layout as LayoutStyle, Table, Heading } from '../styles';
+import {
+  Layout as LayoutStyle,
+  Table,
+  StyledForm,
+  StyledButton
+} from '../styles';
 import { monthsOfYear } from '../utils/date';
+
+const { InputField: Input, Heading } = Picasso;
 
 const TransactionsRow = styled(LayoutStyle.Row)`
   justify-content: center;
@@ -71,7 +78,7 @@ class Transactions extends Component {
     return (
       <Layout>
         <TransactionsRow>
-          <Heading.H1>Transactions</Heading.H1>
+          <Heading>Transactions</Heading>
         </TransactionsRow>
         <Query query={GET_CATEGORIES}>
           {({
@@ -135,7 +142,7 @@ class Transactions extends Component {
                   </Query>
                 </TransactionsRow>
                 <TransactionsRow>
-                  <form onSubmit={handleSubmit}>
+                  <StyledForm onSubmit={handleSubmit}>
                     <select
                       name="category"
                       onChange={handleChange}
@@ -151,26 +158,29 @@ class Transactions extends Component {
                         );
                       })}
                     </select>
-                    <input
+                    <Input
                       type="number"
                       name="amount"
                       value={amount}
                       onChange={handleChange}
+                      label="Amount"
                     />
-                    <input
+                    <Input
                       type="date"
                       name="date"
                       value={date}
                       onChange={handleChange}
+                      label="Date"
                     />
-                    <input
+                    <Input
                       type="text"
                       name="description"
                       value={description}
                       onChange={handleChange}
+                      label="Description"
                     />
-                    <Button type="submit">Submit</Button>
-                  </form>
+                    <StyledButton type="submit">Submit</StyledButton>
+                  </StyledForm>
                 </TransactionsRow>
               </>
             );

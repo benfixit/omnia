@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Input, { InputWithValue } from './index';
+import Input, { InputField } from './index';
 
 export default {
   title: 'Input',
@@ -23,6 +23,10 @@ export const withInput = () => {
   );
 };
 
-export const withInputValue = () => (
-  <InputWithValue name="value" placeholder="with value placeholder..." />
+export const withInputField = () => (
+  <InputField
+    name="value"
+    placeholder="with field placeholder..."
+    label="Input Label"
+  />
 );

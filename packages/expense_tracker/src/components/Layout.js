@@ -4,8 +4,11 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { v4 } from 'uuid';
-import { Layout as LayoutStyle, Heading } from '../styles';
+import Picasso from '@omnia/picasso';
+import { Layout as LayoutStyle } from '../styles';
 import { monthsOfYear } from '../utils/date';
+
+const { Heading } = Picasso;
 
 const NavRow = styled(LayoutStyle.Row)`
   justify-content: space-between;
@@ -18,7 +21,7 @@ const LowerNavRow = styled(LayoutStyle.Row)`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 `;
 
-const NavH1 = styled(Heading.H1)`
+const NavH1 = styled(Heading)`
   font-size: 20px;
   color: white;
 `;

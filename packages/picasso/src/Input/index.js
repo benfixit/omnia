@@ -3,11 +3,15 @@ import styled from 'styled-components';
 
 import themeGet from '../theme/utils';
 import withValue from '../hoc/withValue';
+import withField from '../hoc/withField';
 
 const StyledInput = styled.input`
-  padding: ${themeGet('space.2')};
+  padding: ${themeGet('space.2')} 0px;
+  letter-spacing: 0.25px;
+  box-sizing: border-box;
   border: none;
   border-bottom: thin solid ${themeGet('colors.gray')};
+  width: 380px;
   &:focus {
     outline: none;
   }
@@ -20,8 +24,8 @@ const Input = props => {
   return <StyledInput {...props} />;
 };
 
-const InputWithValue = withValue('string', Input);
+const InputField = withField(withValue('string', Input));
 
-export { InputWithValue };
+export { InputField };
 
 export default Input;

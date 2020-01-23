@@ -17,9 +17,10 @@ const supportedElements = [
 
 const Text = styled.p`
   font-family: ${themeGet('fonts.sansSerif')};
-  color: ${themeGet('colors.primary')};
+  color: ${themeGet('colors.textDefault')};
   font-size: ${themeGet('fontSizes.1')};
   font-weight: ${themeGet('fontWeights.4')};
+  box-sizing: border-box;
 `;
 
 Text.defaultProps = {

@@ -11,9 +11,14 @@ import { GET_CATEGORIES } from '../graphql/categories';
 import { ADD_BUDGET, GET_BUDGETS } from '../graphql/budgets';
 import { GET_TRANSACTIONS } from '../graphql/transactions';
 import Layout from './Layout';
-import { Layout as LayoutStyle, Table, Heading } from '../styles';
+import {
+  Layout as LayoutStyle,
+  Table,
+  StyledForm,
+  StyledButton
+} from '../styles';
 
-const { Button, Input } = Picasso;
+const { InputField: Input, Heading, Pane } = Picasso;
 
 const BudgetsRow = styled(LayoutStyle.Row)`
   justify-content: center;
@@ -94,7 +99,7 @@ class Budgets extends Component {
     return (
       <Layout>
         <BudgetsRow>
-          <Heading.H1>Budget</Heading.H1>
+          <Heading>Budget</Heading>
         </BudgetsRow>
         <Query query={GET_CATEGORIES}>
           {({
@@ -240,29 +245,34 @@ class Budgets extends Component {
                               </Table.Table>
                             </BudgetsRow>
                             <BudgetsRow>
-                              <form onSubmit={handleSubmit}>
-                                <select
-                                  name="category"
-                                  onChange={handleChange}
-                                  value={category}
-                                >
-                                  <option value="">Select a category</option>
-                                  {formCategories.map(item => {
-                                    const { _id: id, title } = item;
-                                    return (
-                                      <option value={id} key={id}>
-                                        {title}
-                                      </option>
-                                    );
-                                  })}
-                                </select>
+                              <StyledForm onSubmit={handleSubmit}>
+                                <Pane>
+                                  <select
+                                    name="category"
+                                    onChange={handleChange}
+                                    value={category}
+                                  >
+                                    <option value="">Select a category</option>
+                                    {formCategories.map(item => {
+                                      const { _id: id, title } = item;
+                                      return (
+                                        <option value={id} key={id}>
+                                          {title}
+                                        </option>
+                                      );
+                                    })}
+                                  </select>
+                                </Pane>
                                 <Input
                                   name="amount"
                                   value={amount}
                                   onChange={handleChange}
+                                  label="Amount"
                                 />
-                                <Button type="submit">Submit</Button>
-                              </form>
+                                <StyledButton type="submit">
+                                  Submit
+                                </StyledButton>
+                              </StyledForm>
                             </BudgetsRow>
                           </>
                         );
