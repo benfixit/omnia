@@ -7,6 +7,7 @@ import List from './src/List';
 import Loading from './src/Loading';
 import Pane from './src/Pane';
 import Text from './src/Text';
+import TextArea, { TextAreaField } from './src/TextArea';
 import theme from './src/theme';
 
 const Picasso = {
@@ -22,6 +23,8 @@ const Picasso = {
   Loading,
   Pane,
   Text,
+  TextArea,
+  TextAreaField,
   theme
 };
 

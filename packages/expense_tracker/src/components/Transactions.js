@@ -17,7 +17,7 @@ import {
 } from '../styles';
 import { monthsOfYear } from '../utils/date';
 
-const { InputField: Input, Heading } = Picasso;
+const { InputField, Heading, TextAreaField } = Picasso;
 
 const TransactionsRow = styled(LayoutStyle.Row)`
   justify-content: center;
@@ -158,22 +158,21 @@ class Transactions extends Component {
                         );
                       })}
                     </select>
-                    <Input
+                    <InputField
                       type="number"
                       name="amount"
                       value={amount}
                       onChange={handleChange}
                       label="Amount"
                     />
-                    <Input
+                    <InputField
                       type="date"
                       name="date"
                       value={date}
                       onChange={handleChange}
                       label="Date"
                     />
-                    <Input
-                      type="text"
+                    <TextAreaField
                       name="description"
                       value={description}
                       onChange={handleChange}
