@@ -2,7 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
-import Button from '../Button';
+
+import ModalHeader from './ModalHeader';
+import ModalContent from './ModalContent';
+import ModalAction from './ModalAction';
 import themeGet from '../theme/utils';
 
 const modalRoot = document.getElementById('docs-root');
@@ -35,23 +38,15 @@ const Container = styled.div`
   position: relative;
   margin: 0 auto;
   width: 80%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background: ${themeGet('colors.white')};
   border: thin solid ${themeGet('colors.gray')};
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   animation: ${containerLanding} 0.5s;
 `;
-
-const ModalFrame = props => {
-  const { children, show, onClose } = props;
-  return (
-    <BackDrop show={show}>
-      <Container>
-        {children}
-        <Button onClick={onClose}>Close</Button>
-      </Container>
-    </BackDrop>
-  );
-};
 
 class Modal extends React.Component {
   constructor(props) {
@@ -69,37 +64,28 @@ class Modal extends React.Component {
   }
 
   render() {
-    const { children, show, onClose } = this.props;
+    const { children, show } = this.props;
     const { wrapper } = this;
     return ReactDOM.createPortal(
-      <ModalFrame show={show} onClose={onClose}>
-        {children}
-      </ModalFrame>,
+      <BackDrop show={show}>
+        <Container>{children}</Container>
+      </BackDrop>,
       wrapper
     );
   }
 }
 
-ModalFrame.propTypes = {
-  children: PropTypes.node.isRequired,
-  show: PropTypes.bool,
-  onClose: PropTypes.func
-};
-
-ModalFrame.defaultProps = {
-  show: false,
-  onClose: () => {}
-};
-
 Modal.propTypes = {
   children: PropTypes.node.isRequired,
-  show: PropTypes.bool,
-  onClose: PropTypes.func
+  show: PropTypes.bool
 };
 
 Modal.defaultProps = {
-  onClose: () => {},
   show: false
 };
+
+Modal.Header = ModalHeader;
+Modal.Action = ModalAction;
+Modal.Content = ModalContent;
 
 export default Modal;
