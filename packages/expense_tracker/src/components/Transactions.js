@@ -17,7 +17,7 @@ import {
 } from '../styles';
 import { monthsOfYear } from '../utils/date';
 
-const { InputField, Heading, TextAreaField } = Picasso;
+const { InputField, Heading, SelectField, TextAreaField } = Picasso;
 
 const TransactionsRow = styled(LayoutStyle.Row)`
   justify-content: center;
@@ -143,10 +143,11 @@ class Transactions extends Component {
                 </TransactionsRow>
                 <TransactionsRow>
                   <StyledForm onSubmit={handleSubmit}>
-                    <select
+                    <SelectField
                       name="category"
                       onChange={handleChange}
                       value={category}
+                      label="Category"
                     >
                       <option value="">Select a category</option>
                       {categories.map(item => {
@@ -157,7 +158,7 @@ class Transactions extends Component {
                           </option>
                         );
                       })}
-                    </select>
+                    </SelectField>
                     <InputField
                       type="number"
                       name="amount"

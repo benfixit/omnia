@@ -12,15 +12,21 @@ import { ADD_BUDGET, GET_BUDGETS } from '../graphql/budgets';
 import { GET_TRANSACTIONS } from '../graphql/transactions';
 import Layout from './Layout';
 import {
-  Layout as LayoutStyle,
   Table,
   StyledForm,
-  StyledButton
+  FormButton,
+  StyledButton,
+  StyledHeading
 } from '../styles';
 
-const { InputField: Input, Heading, Pane } = Picasso;
+const { InputField, Modal, SelectField, Pane } = Picasso;
 
-const BudgetsRow = styled(LayoutStyle.Row)`
+const BudgetsRow = styled(Pane)`
+  justify-content: space-between;
+  padding: 15px 10px;
+`;
+
+const TableContainer = styled(Pane)`
   justify-content: center;
   padding: 15px 10px;
 `;
@@ -46,9 +52,22 @@ class Budgets extends Component {
     super(props);
     this.state = {
       amount: 1000,
-      category: ''
+      category: '',
+      showModal: false
     };
   }
+
+  handleOpenModal = () => {
+    this.setState({
+      showModal: true
+    });
+  };
+
+  handleCloseModal = () => {
+    this.setState({
+      showModal: false
+    });
+  };
 
   handleChange = event => {
     const {
@@ -56,15 +75,6 @@ class Budgets extends Component {
     } = event;
     this.setState({
       [name]: value
-    });
-  };
-
-  handleCheck = event => {
-    const {
-      target: { name, checked }
-    } = event;
-    this.setState({
-      [name]: checked
     });
   };
 
@@ -86,8 +96,13 @@ class Budgets extends Component {
   };
 
   render() {
-    const { amount, category } = this.state;
-    const { handleChange, handleSubmit } = this;
+    const { amount, category, showModal } = this.state;
+    const {
+      handleChange,
+      handleSubmit,
+      handleOpenModal,
+      handleCloseModal
+    } = this;
     const date = new Date();
     const defaultYear = date.getFullYear();
     const {
@@ -99,7 +114,8 @@ class Budgets extends Component {
     return (
       <Layout>
         <BudgetsRow>
-          <Heading>Budget</Heading>
+          <StyledHeading>Budget</StyledHeading>
+          <StyledButton onClick={handleOpenModal}>Add Transaction</StyledButton>
         </BudgetsRow>
         <Query query={GET_CATEGORIES}>
           {({
@@ -161,7 +177,7 @@ class Budgets extends Component {
                         });
                         return (
                           <>
-                            <BudgetsRow>
+                            <TableContainer>
                               <Table.Table>
                                 <thead>
                                   <tr>
@@ -243,37 +259,42 @@ class Budgets extends Component {
                                   </tr>
                                 </tfoot>
                               </Table.Table>
-                            </BudgetsRow>
-                            <BudgetsRow>
-                              <StyledForm onSubmit={handleSubmit}>
-                                <Pane>
-                                  <select
-                                    name="category"
+                            </TableContainer>
+                            <Modal show={showModal}>
+                              <Modal.Header title="Budget List" />
+                              <Modal.Content>
+                                <StyledForm onSubmit={handleSubmit}>
+                                  <Pane>
+                                    <SelectField
+                                      name="category"
+                                      onChange={handleChange}
+                                      value={category}
+                                      label="Category"
+                                    >
+                                      <option value="">
+                                        Select a category
+                                      </option>
+                                      {formCategories.map(item => {
+                                        const { _id: id, title } = item;
+                                        return (
+                                          <option value={id} key={id}>
+                                            {title}
+                                          </option>
+                                        );
+                                      })}
+                                    </SelectField>
+                                  </Pane>
+                                  <InputField
+                                    name="amount"
+                                    value={amount}
                                     onChange={handleChange}
-                                    value={category}
-                                  >
-                                    <option value="">Select a category</option>
-                                    {formCategories.map(item => {
-                                      const { _id: id, title } = item;
-                                      return (
-                                        <option value={id} key={id}>
-                                          {title}
-                                        </option>
-                                      );
-                                    })}
-                                  </select>
-                                </Pane>
-                                <Input
-                                  name="amount"
-                                  value={amount}
-                                  onChange={handleChange}
-                                  label="Amount"
-                                />
-                                <StyledButton type="submit">
-                                  Submit
-                                </StyledButton>
-                              </StyledForm>
-                            </BudgetsRow>
+                                    label="Amount"
+                                  />
+                                  <FormButton type="submit">Submit</FormButton>
+                                </StyledForm>
+                              </Modal.Content>
+                              <Modal.Action onClose={handleCloseModal} />
+                            </Modal>
                           </>
                         );
                       }}

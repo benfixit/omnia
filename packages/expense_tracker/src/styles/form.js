@@ -15,7 +15,11 @@ export const StyledForm = styled.form`
   align-items: center;
 `;
 
-export const StyledButton = styled(Button)`
+export const FormButton = styled(Button)`
   margin: 12px 0px;
   width: 100%;
+`;
+
+export const StyledButton = styled(Button)`
+  margin: 12px 0px;
 `;
