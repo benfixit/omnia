@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import Pane from '../Pane';
 
 const StyledPane = styled(Pane)`
-  border: thin solid red;
   justify-content: center;
   width: 100%;
+  margin-bottom: 20px;
 `;
 
 const ModalContent = props => {

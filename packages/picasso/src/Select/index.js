@@ -23,8 +23,10 @@ const Select = props => {
   return <StyledSelect {...props} />;
 };
 
-const SelectField = withField(withValue('string', Select));
+const SelectWithValue = withField(withValue('string', Select));
 
-export { SelectField };
+const SelectField = withField(Select);
+
+export { SelectField, SelectWithValue };
 
 export default Select;

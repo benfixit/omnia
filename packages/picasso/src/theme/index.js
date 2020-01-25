@@ -25,6 +25,7 @@ const colors = {
   primary: '#3498db',
   hoveredPrimary: '#2980b9',
   gray: '#808080',
+  lightGray: '#bbbbbb',
   success: '#5cb85c',
   danger: '#d9534f',
   hoveredDanger: '#b7312d',

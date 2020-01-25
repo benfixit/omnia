@@ -54,24 +54,25 @@ const Layout = props => {
     <LayoutStyle.Container>
       <NavRow>
         <NavH1>
-          <NavLink to="/">Personal App</NavLink>
+          <NavLink to="/budgets">Expense Tracker</NavLink>
         </NavH1>
         <NavUl>
-          <NavLink to="/">Home</NavLink>
           <NavLink to="/budgets">Budgets</NavLink>
           <NavLink to="/transactions">Transactions</NavLink>
         </NavUl>
       </NavRow>
       <LowerNavRow>
         <NavUl>
-          {Object.keys(monthsOfYear).map(month => (
-            <LowerNavLink
-              key={v4()}
-              to={`/${root}/2019/${month.toLowerCase()}`}
-            >
-              {month}
-            </LowerNavLink>
-          ))}
+          {Object.keys(monthsOfYear).map(month => {
+            return (
+              <LowerNavLink
+                key={v4()}
+                to={`/${root}/2019/${month.toLowerCase()}`}
+              >
+                {month}
+              </LowerNavLink>
+            );
+          })}
         </NavUl>
       </LowerNavRow>
       {children}

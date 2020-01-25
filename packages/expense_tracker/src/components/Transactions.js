@@ -13,15 +13,17 @@ import {
   Layout as LayoutStyle,
   Table,
   StyledForm,
-  StyledButton
+  FormButton,
+  StyledButton,
+  StyledHeading
 } from '../styles';
 import { monthsOfYear } from '../utils/date';
 
-const { InputField, Heading, SelectField, TextAreaField } = Picasso;
+const { InputField, Modal, SelectField, TextAreaField } = Picasso;
 
 const TransactionsRow = styled(LayoutStyle.Row)`
-  justify-content: center;
-  padding: 15px 10px;
+  justify-content: space-between;
+  padding: 14px 30px;
 `;
 
 class Transactions extends Component {
@@ -32,9 +34,22 @@ class Transactions extends Component {
       amount: 0,
       date: JSON.stringify(new Date()).slice(1, 11),
       category: '',
-      description: ''
+      description: '',
+      showModal: false
     };
   }
+
+  handleOpenModal = () => {
+    this.setState({
+      showModal: true
+    });
+  };
+
+  handleCloseModal = () => {
+    this.setState({
+      showModal: false
+    });
+  };
 
   handleChange = event => {
     const {
@@ -65,8 +80,13 @@ class Transactions extends Component {
   };
 
   render() {
-    const { description, amount, category, date } = this.state;
-    const { handleChange, handleSubmit } = this;
+    const { description, amount, category, date, showModal } = this.state;
+    const {
+      handleChange,
+      handleSubmit,
+      handleCloseModal,
+      handleOpenModal
+    } = this;
     const dateParam = new Date();
     const defaultYear = dateParam.getFullYear();
     const {
@@ -78,7 +98,8 @@ class Transactions extends Component {
     return (
       <Layout>
         <TransactionsRow>
-          <Heading>Transactions</Heading>
+          <StyledHeading>Transactions</StyledHeading>
+          <StyledButton onClick={handleOpenModal}>Add Transaction</StyledButton>
         </TransactionsRow>
         <Query query={GET_CATEGORIES}>
           {({
@@ -142,45 +163,51 @@ class Transactions extends Component {
                   </Query>
                 </TransactionsRow>
                 <TransactionsRow>
-                  <StyledForm onSubmit={handleSubmit}>
-                    <SelectField
-                      name="category"
-                      onChange={handleChange}
-                      value={category}
-                      label="Category"
-                    >
-                      <option value="">Select a category</option>
-                      {categories.map(item => {
-                        const { _id: id, title } = item;
-                        return (
-                          <option value={id} key={id}>
-                            {title}
-                          </option>
-                        );
-                      })}
-                    </SelectField>
-                    <InputField
-                      type="number"
-                      name="amount"
-                      value={amount}
-                      onChange={handleChange}
-                      label="Amount"
-                    />
-                    <InputField
-                      type="date"
-                      name="date"
-                      value={date}
-                      onChange={handleChange}
-                      label="Date"
-                    />
-                    <TextAreaField
-                      name="description"
-                      value={description}
-                      onChange={handleChange}
-                      label="Description"
-                    />
-                    <StyledButton type="submit">Submit</StyledButton>
-                  </StyledForm>
+                  <Modal show={showModal}>
+                    <Modal.Header title="Transaction" />
+                    <Modal.Content>
+                      <StyledForm onSubmit={handleSubmit}>
+                        <SelectField
+                          name="category"
+                          onChange={handleChange}
+                          value={category}
+                          label="Category"
+                        >
+                          <option value="">Select a category</option>
+                          {categories.map(item => {
+                            const { _id: id, title } = item;
+                            return (
+                              <option value={id} key={id}>
+                                {title}
+                              </option>
+                            );
+                          })}
+                        </SelectField>
+                        <InputField
+                          type="number"
+                          name="amount"
+                          value={amount}
+                          onChange={handleChange}
+                          label="Amount"
+                        />
+                        <InputField
+                          type="date"
+                          name="date"
+                          value={date}
+                          onChange={handleChange}
+                          label="Date"
+                        />
+                        <TextAreaField
+                          name="description"
+                          value={description}
+                          onChange={handleChange}
+                          label="Description"
+                        />
+                        <FormButton type="submit">Submit</FormButton>
+                      </StyledForm>
+                    </Modal.Content>
+                    <Modal.Action onClose={handleCloseModal} />
+                  </Modal>
                 </TransactionsRow>
               </>
             );

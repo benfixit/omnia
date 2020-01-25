@@ -23,7 +23,7 @@ const { InputField, Modal, SelectField, Pane } = Picasso;
 
 const BudgetsRow = styled(Pane)`
   justify-content: space-between;
-  padding: 15px 10px;
+  padding: 14px 30px;
 `;
 
 const TableContainer = styled(Pane)`
@@ -115,7 +115,7 @@ class Budgets extends Component {
       <Layout>
         <BudgetsRow>
           <StyledHeading>Budget</StyledHeading>
-          <StyledButton onClick={handleOpenModal}>Add Transaction</StyledButton>
+          <StyledButton onClick={handleOpenModal}>Add Budget</StyledButton>
         </BudgetsRow>
         <Query query={GET_CATEGORIES}>
           {({
@@ -261,7 +261,7 @@ class Budgets extends Component {
                               </Table.Table>
                             </TableContainer>
                             <Modal show={showModal}>
-                              <Modal.Header title="Budget List" />
+                              <Modal.Header title="Budget" />
                               <Modal.Content>
                                 <StyledForm onSubmit={handleSubmit}>
                                   <Pane>

@@ -5,6 +5,7 @@
     "start:expense": "cd packages/expense_tracker && yarn start",
     "start:picasso": "cd packages/picasso && yarn start",
     "start:poco": "cd packages/poco_a_poco && yarn start",
+    "start:portum": "cd packages/portum && yarn start",
     "build:picasso": "cd packages/picasso && yarn build",
     "bootstrap": "lerna bootstrap --use-workspaces",
     "lint": "lerna exec --parallel -- eslint --ext .js src/",

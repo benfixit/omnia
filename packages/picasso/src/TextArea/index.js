@@ -24,9 +24,11 @@ const TextArea = props => {
   return <StyledTextArea {...props} />;
 };
 
-const TextAreaField = withField(withValue('string', TextArea));
+const TextAreaWithValue = withField(withValue('string', TextArea));
 
-export { TextAreaField };
+const TextAreaField = withField(TextArea);
+
+export { TextAreaField, TextAreaWithValue };
 
 TextArea.defaultProps = {
   rows: 5

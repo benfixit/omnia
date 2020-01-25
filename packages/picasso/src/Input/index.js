@@ -24,8 +24,10 @@ const Input = props => {
   return <StyledInput {...props} />;
 };
 
-const InputField = withField(withValue('string', Input));
+const InputWithValue = withField(withValue('string', Input));
 
-export { InputField };
+const InputField = withField(Input);
+
+export { InputField, InputWithValue };
 
 export default Input;

@@ -6,10 +6,9 @@ import Pane from '../Pane';
 import Heading from '../Heading';
 
 const StyledPane = styled(Pane)`
-  border: thin solid red;
   justify-content: center;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 const ModalHeader = props => {

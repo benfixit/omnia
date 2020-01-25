@@ -5,7 +5,6 @@ import Pane from '../Pane';
 import Button from '../Button';
 
 const StyledPane = styled(Pane)`
-  border: thin solid red;
   justify-content: flex-end;
   width: 100%;
 `;
