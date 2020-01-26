@@ -235,9 +235,9 @@ class Budgets extends Component {
 }
 
 Budgets.propTypes = {
-  categories: PropTypes.shape([]).isRequired,
-  budgets: PropTypes.shape([]).isRequired,
-  transactions: PropTypes.shape([]).isRequired,
+  categories: PropTypes.instanceOf(Array).isRequired,
+  budgets: PropTypes.instanceOf(Array).isRequired,
+  transactions: PropTypes.instanceOf(Array).isRequired,
   mutate: PropTypes.func
 };
 
