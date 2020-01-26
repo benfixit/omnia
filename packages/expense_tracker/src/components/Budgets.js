@@ -3,13 +3,15 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { v4 } from 'uuid';
-import { graphql, Query } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import compose from 'lodash/fp/compose';
 import Picasso from '@omnia/picasso';
-import { monthsOfYear } from '../utils/date';
-import { GET_CATEGORIES } from '../graphql/categories';
+
+import withCategoryQuery from '../hoc/withCategoryQuery';
+import withBudgetQuery from '../hoc/withBudgetQuery';
+import withTransactionQuery from '../hoc/withTransactionQuery';
 import { ADD_BUDGET, GET_BUDGETS } from '../graphql/budgets';
-import { GET_TRANSACTIONS } from '../graphql/transactions';
+import { formatter } from '../utils/money';
 import Layout from './Layout';
 import {
   Table,
@@ -19,7 +21,7 @@ import {
   StyledHeading
 } from '../styles';
 
-const { DateField, InputField, Loading, Modal, SelectField, Pane } = Picasso;
+const { DateField, InputField, Modal, SelectField, Pane } = Picasso;
 
 const BudgetsRow = styled(Pane)`
   justify-content: space-between;
@@ -40,12 +42,6 @@ const TableFooterTh = styled(Table.Th)`
   background-color: white;
   color: #000000;
 `;
-
-const formatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'NGN',
-  minimumFractionDigits: 2
-});
 
 class Budgets extends Component {
   constructor(props) {
@@ -108,244 +104,151 @@ class Budgets extends Component {
       handleOpenModal,
       handleCloseModal
     } = this;
-    const queryDate = new Date();
-    const defaultYear = queryDate.getFullYear();
-    const {
-      match: {
-        params: { year = defaultYear, month }
-      }
-    } = this.props;
-    const monthIndex = monthsOfYear[month] || queryDate.getMonth();
+    const { categories, budgets, transactions } = this.props;
+
+    const transactionsTotal = transactions.reduce(
+      (acc, item) => acc + Number(item.amount),
+      0
+    );
+
+    const budgetsTotal = budgets.reduce(
+      (acc, item) => acc + Number(item.amount),
+      0
+    );
+
+    const existingBudgetCategory = budgets.reduce((acc, item) => {
+      const {
+        category: { _id: id }
+      } = item;
+      return [...acc, id];
+    }, []);
+
+    const formCategories = categories.filter(item => {
+      const { _id: id } = item;
+      return !existingBudgetCategory.includes(id);
+    });
+
     return (
       <Layout>
         <BudgetsRow>
           <StyledHeading>Budget</StyledHeading>
           <StyledButton onClick={handleOpenModal}>Add Budget</StyledButton>
         </BudgetsRow>
-        <Query query={GET_CATEGORIES}>
-          {({
-            data: categoriesData,
-            error: categoriesError,
-            loading: categoriesLoading
-          }) => {
-            if (categoriesLoading) return <Loading />;
-            if (categoriesError) return <h2>Error :(</h2>;
-            const { categories } = categoriesData;
-            return (
-              <Query
-                query={GET_TRANSACTIONS}
-                variables={{
-                  year: Number(year),
-                  month: Number(monthIndex)
-                }}
-              >
-                {({
-                  data: transactionsData,
-                  error: transactionError,
-                  loading: transactionLoading
-                }) => {
-                  if (transactionLoading) return <Loading />;
-                  if (transactionError) return <h2>Error :(</h2>;
-                  const { transactions } = transactionsData;
-                  const transactionsTotal = transactions.reduce(
-                    (acc, item) => acc + Number(item.amount),
-                    0
-                  );
-                  return (
-                    <Query
-                      query={GET_BUDGETS}
-                      variables={{
-                        year: Number(year),
-                        month: Number(monthIndex)
-                      }}
+        <TableContainer>
+          <Table.Table>
+            <thead>
+              <tr>
+                <Table.Th>Category</Table.Th>
+                <Table.Th>Budget</Table.Th>
+                <Table.Th>Actual</Table.Th>
+                <Table.Th>Difference</Table.Th>
+              </tr>
+            </thead>
+            <tbody>
+              {budgets.map(budget => {
+                const actual = transactions
+                  .filter(transaction => {
+                    const {
+                      category: { _id: transactionCategoryId }
+                    } = transaction;
+                    const {
+                      category: { _id: budgetCategoryId }
+                    } = budget;
+                    return transactionCategoryId === budgetCategoryId;
+                  })
+                  .reduce((acc, item) => acc + Number(item.amount), 0);
+
+                const difference = budget.amount - actual;
+
+                return (
+                  <tr key={v4()}>
+                    <TitleTableData>{budget.category.title}</TitleTableData>
+                    <Table.Td>{formatter.format(budget.amount)}</Table.Td>
+                    <Table.Td>{formatter.format(actual)}</Table.Td>
+                    <Table.Td
+                      status={Number(difference) > 0 ? 'positive' : 'negative'}
                     >
-                      {({ data: budgetsData, error, loading }) => {
-                        if (loading) return <Loading />;
-                        if (error) return <h2>Error :(</h2>;
-                        const { budgets } = budgetsData;
-                        const budgetsTotal = budgets.reduce(
-                          (acc, item) => acc + Number(item.amount),
-                          0
-                        );
-                        const existingBudgetCategory = budgets.reduce(
-                          (acc, item) => {
-                            const {
-                              category: { _id: id }
-                            } = item;
-                            return [...acc, id];
-                          },
-                          []
-                        );
-                        const formCategories = categories.filter(item => {
-                          const { _id: id } = item;
-                          return !existingBudgetCategory.includes(id);
-                        });
-                        return (
-                          <>
-                            <TableContainer>
-                              <Table.Table>
-                                <thead>
-                                  <tr>
-                                    <Table.Th>Category</Table.Th>
-                                    <Table.Th>Budget</Table.Th>
-                                    <Table.Th>Actual</Table.Th>
-                                    <Table.Th>Difference</Table.Th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {budgets.map(budget => {
-                                    const actual = transactions
-                                      .filter(transaction => {
-                                        const {
-                                          category: {
-                                            _id: transactionCategoryId
-                                          }
-                                        } = transaction;
-                                        const {
-                                          category: { _id: budgetCategoryId }
-                                        } = budget;
-                                        return (
-                                          transactionCategoryId ===
-                                          budgetCategoryId
-                                        );
-                                      })
-                                      .reduce(
-                                        (acc, item) =>
-                                          acc + Number(item.amount),
-                                        0
-                                      );
-
-                                    const difference = budget.amount - actual;
-
-                                    return (
-                                      <tr key={v4()}>
-                                        <TitleTableData>
-                                          {budget.category.title}
-                                        </TitleTableData>
-                                        <Table.Td>
-                                          {formatter.format(budget.amount)}
-                                        </Table.Td>
-                                        <Table.Td>
-                                          {formatter.format(actual)}
-                                        </Table.Td>
-                                        <Table.Td
-                                          status={
-                                            Number(difference) > 0
-                                              ? 'positive'
-                                              : 'negative'
-                                          }
-                                        >
-                                          {Number(difference) > 0
-                                            ? formatter.format(
-                                                Math.abs(difference)
-                                              )
-                                            : `(${formatter.format(
-                                                Math.abs(difference)
-                                              )})`}
-                                        </Table.Td>
-                                      </tr>
-                                    );
-                                  })}
-                                </tbody>
-                                <tfoot>
-                                  <tr>
-                                    <TableFooterTh>Total</TableFooterTh>
-                                    <TableFooterTh>
-                                      {formatter.format(budgetsTotal)}
-                                    </TableFooterTh>
-                                    <TableFooterTh>
-                                      {formatter.format(transactionsTotal)}
-                                    </TableFooterTh>
-                                    <TableFooterTh>
-                                      {formatter.format(
-                                        budgetsTotal - transactionsTotal
-                                      )}
-                                    </TableFooterTh>
-                                  </tr>
-                                </tfoot>
-                              </Table.Table>
-                            </TableContainer>
-                            <Modal show={showModal}>
-                              <Modal.Header title="Budget" />
-                              <Modal.Content>
-                                <StyledForm onSubmit={handleSubmit}>
-                                  <Pane>
-                                    <SelectField
-                                      name="category"
-                                      onChange={handleChange}
-                                      value={category}
-                                      label="Category"
-                                    >
-                                      <option value="">
-                                        Select a category
-                                      </option>
-                                      {formCategories.map(item => {
-                                        const { _id: id, title } = item;
-                                        return (
-                                          <option value={id} key={id}>
-                                            {title}
-                                          </option>
-                                        );
-                                      })}
-                                    </SelectField>
-                                  </Pane>
-                                  <DateField
-                                    name="date"
-                                    value={date}
-                                    onChange={handleChange}
-                                    label="period"
-                                  />
-                                  <InputField
-                                    name="amount"
-                                    value={amount}
-                                    onChange={handleChange}
-                                    label="Amount"
-                                  />
-                                  <FormButton type="submit">Submit</FormButton>
-                                </StyledForm>
-                              </Modal.Content>
-                              <Modal.Action onClose={handleCloseModal} />
-                            </Modal>
-                          </>
-                        );
-                      }}
-                    </Query>
-                  );
-                }}
-              </Query>
-            );
-          }}
-        </Query>
+                      {Number(difference) > 0
+                        ? formatter.format(Math.abs(difference))
+                        : `(${formatter.format(Math.abs(difference))})`}
+                    </Table.Td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            <tfoot>
+              <tr>
+                <TableFooterTh>Total</TableFooterTh>
+                <TableFooterTh>{formatter.format(budgetsTotal)}</TableFooterTh>
+                <TableFooterTh>
+                  {formatter.format(transactionsTotal)}
+                </TableFooterTh>
+                <TableFooterTh>
+                  {formatter.format(budgetsTotal - transactionsTotal)}
+                </TableFooterTh>
+              </tr>
+            </tfoot>
+          </Table.Table>
+        </TableContainer>
+        <Modal show={showModal}>
+          <Modal.Header title="Budget" />
+          <Modal.Content>
+            <StyledForm onSubmit={handleSubmit}>
+              <Pane>
+                <SelectField
+                  name="category"
+                  onChange={handleChange}
+                  value={category}
+                  label="Category"
+                >
+                  <option value="">Select a category</option>
+                  {formCategories.map(item => {
+                    const { _id: id, title } = item;
+                    return (
+                      <option value={id} key={id}>
+                        {title}
+                      </option>
+                    );
+                  })}
+                </SelectField>
+              </Pane>
+              <DateField
+                name="date"
+                value={date}
+                onChange={handleChange}
+                label="period"
+              />
+              <InputField
+                name="amount"
+                value={amount}
+                onChange={handleChange}
+                label="Amount"
+              />
+              <FormButton type="submit">Submit</FormButton>
+            </StyledForm>
+          </Modal.Content>
+          <Modal.Action onClose={handleCloseModal} />
+        </Modal>
       </Layout>
     );
   }
 }
 
 Budgets.propTypes = {
-  categoryList: PropTypes.shape({
-    categories: PropTypes.array
-  }),
-  budgetList: PropTypes.shape({
-    budgets: PropTypes.array
-  }),
-  transactionList: PropTypes.shape({
-    transactions: PropTypes.array
-  }),
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      year: PropTypes.string,
-      month: PropTypes.string
-    })
-  }),
+  categories: PropTypes.shape([]).isRequired,
+  budgets: PropTypes.shape([]).isRequired,
+  transactions: PropTypes.shape([]).isRequired,
   mutate: PropTypes.func
 };
 
 Budgets.defaultProps = {
-  categoryList: {},
-  budgetList: {},
-  transactionList: {},
-  match: {},
   mutate: () => {}
 };
 
-export default compose(graphql(ADD_BUDGET), withRouter)(Budgets);
+export default compose(
+  withRouter,
+  graphql(ADD_BUDGET),
+  withCategoryQuery,
+  withBudgetQuery,
+  withTransactionQuery
+)(Budgets);
