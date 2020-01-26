@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Select, { SelectField } from './index';
+import Select, { SelectWithValue } from './index';
 
 export default {
   title: 'Select',
@@ -27,11 +27,11 @@ export const withSelect = () => {
   );
 };
 
-export const withSelectField = () => (
-  <SelectField name="test" label="Select Label">
+export const withSelectValue = () => (
+  <SelectWithValue name="test" label="Select Label">
     <option value="benz">Benz</option>
     <option value="volvo">Volvo</option>
     <option value="range">Range Rover</option>
     <option value="camry">Camry</option>
-  </SelectField>
+  </SelectWithValue>
 );

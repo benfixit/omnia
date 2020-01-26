@@ -19,7 +19,7 @@ import {
   StyledHeading
 } from '../styles';
 
-const { InputField, Modal, SelectField, Pane } = Picasso;
+const { DateField, InputField, Loading, Modal, SelectField, Pane } = Picasso;
 
 const BudgetsRow = styled(Pane)`
   justify-content: space-between;
@@ -52,6 +52,7 @@ class Budgets extends Component {
     super(props);
     this.state = {
       amount: 1000,
+      date: JSON.stringify(new Date()).slice(1, 11),
       category: '',
       showModal: false
     };
@@ -80,12 +81,16 @@ class Budgets extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const { amount, category } = this.state;
+    const { amount, category, date } = this.state;
+    const budgetDate = new Date(date);
     const { mutate } = this.props;
     mutate({
       variables: {
         amount: Number(amount),
-        category
+        category,
+        year: Number(budgetDate.getFullYear()),
+        month: Number(budgetDate.getMonth()),
+        day: Number(budgetDate.getDate())
       },
       refetchQueries: [
         {
@@ -96,21 +101,21 @@ class Budgets extends Component {
   };
 
   render() {
-    const { amount, category, showModal } = this.state;
+    const { amount, category, date, showModal } = this.state;
     const {
       handleChange,
       handleSubmit,
       handleOpenModal,
       handleCloseModal
     } = this;
-    const date = new Date();
-    const defaultYear = date.getFullYear();
+    const queryDate = new Date();
+    const defaultYear = queryDate.getFullYear();
     const {
       match: {
         params: { year = defaultYear, month }
       }
     } = this.props;
-    const monthIndex = monthsOfYear[month] || date.getMonth();
+    const monthIndex = monthsOfYear[month] || queryDate.getMonth();
     return (
       <Layout>
         <BudgetsRow>
@@ -123,7 +128,7 @@ class Budgets extends Component {
             error: categoriesError,
             loading: categoriesLoading
           }) => {
-            if (categoriesLoading) return <h2>Loading...</h2>;
+            if (categoriesLoading) return <Loading />;
             if (categoriesError) return <h2>Error :(</h2>;
             const { categories } = categoriesData;
             return (
@@ -139,7 +144,7 @@ class Budgets extends Component {
                   error: transactionError,
                   loading: transactionLoading
                 }) => {
-                  if (transactionLoading) return <h2>Loading...</h2>;
+                  if (transactionLoading) return <Loading />;
                   if (transactionError) return <h2>Error :(</h2>;
                   const { transactions } = transactionsData;
                   const transactionsTotal = transactions.reduce(
@@ -155,7 +160,7 @@ class Budgets extends Component {
                       }}
                     >
                       {({ data: budgetsData, error, loading }) => {
-                        if (loading) return <h2>Loading...</h2>;
+                        if (loading) return <Loading />;
                         if (error) return <h2>Error :(</h2>;
                         const { budgets } = budgetsData;
                         const budgetsTotal = budgets.reduce(
@@ -284,6 +289,12 @@ class Budgets extends Component {
                                       })}
                                     </SelectField>
                                   </Pane>
+                                  <DateField
+                                    name="date"
+                                    value={date}
+                                    onChange={handleChange}
+                                    label="period"
+                                  />
                                   <InputField
                                     name="amount"
                                     value={amount}

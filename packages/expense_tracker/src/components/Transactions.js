@@ -19,7 +19,7 @@ import {
 } from '../styles';
 import { monthsOfYear } from '../utils/date';
 
-const { InputField, Modal, SelectField, TextAreaField } = Picasso;
+const { DateField, InputField, Modal, SelectField, TextAreaField } = Picasso;
 
 const TransactionsRow = styled(LayoutStyle.Row)`
   justify-content: space-between;
@@ -62,14 +62,17 @@ class Transactions extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const { amount, description, category } = this.state;
-
+    const { amount, description, category, date } = this.state;
+    const transactionDate = new Date(date);
     const { mutate } = this.props;
     mutate({
       variables: {
         amount: Number(amount),
         description,
-        category
+        category,
+        year: transactionDate.getFullYear(),
+        month: transactionDate.getMonth(),
+        day: transactionDate.getDate()
       },
       refetchQueries: [
         {
@@ -190,12 +193,11 @@ class Transactions extends Component {
                           onChange={handleChange}
                           label="Amount"
                         />
-                        <InputField
-                          type="date"
+                        <DateField
                           name="date"
                           value={date}
                           onChange={handleChange}
-                          label="Date"
+                          label="period"
                         />
                         <TextAreaField
                           name="description"

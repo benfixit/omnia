@@ -1,6 +1,7 @@
 import Button from './src/Button';
 import Card from './src/Card';
 import CheckBox, { CheckBoxWithValue, CheckBoxArray } from './src/Checkbox';
+import Date, { DateField } from './src/Date';
 import Flex from './src/Flex';
 import Heading from './src/Heading';
 import Input, { InputField, InputWithValue } from './src/Input';
@@ -21,6 +22,8 @@ const Picasso = {
   CheckBox,
   CheckBoxWithValue,
   CheckBoxArray,
+  Date,
+  DateField,
   Flex,
   Input,
   InputField,

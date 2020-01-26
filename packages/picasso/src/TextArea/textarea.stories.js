@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import TextArea, { TextAreaField } from './index';
+import TextArea, { TextAreaWithValue } from './index';
 
 export default {
   title: 'TextArea',
@@ -23,10 +23,10 @@ export const withInput = () => {
   );
 };
 
-export const withTextAreaField = () => (
-  <TextAreaField
+export const withTextAreaValue = () => (
+  <TextAreaWithValue
     name="value"
-    placeholder="with field placeholder..."
+    placeholder="with value placeholder..."
     label="Text Area Label"
   />
 );

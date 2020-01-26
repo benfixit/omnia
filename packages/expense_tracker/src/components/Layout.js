@@ -64,10 +64,11 @@ const Layout = props => {
       <LowerNavRow>
         <NavUl>
           {Object.keys(monthsOfYear).map(month => {
+            const date = new Date();
             return (
               <LowerNavLink
                 key={v4()}
-                to={`/${root}/2019/${month.toLowerCase()}`}
+                to={`/${root}/${date.getFullYear()}/${month.toLowerCase()}`}
               >
                 {month}
               </LowerNavLink>
