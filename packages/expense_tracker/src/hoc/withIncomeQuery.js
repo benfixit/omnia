@@ -4,13 +4,13 @@ import hoistNonReactStatics from 'hoist-non-react-statics';
 import { Query } from 'react-apollo';
 import Picasso from '@omnia/picasso';
 
-import { GET_TRANSACTIONS } from '../graphql/transactions';
+import { GET_INCOMES } from '../graphql/incomes';
 import { monthsOfYear } from '../utils/date';
 
 const { Loading } = Picasso;
 
-const withTransactionQuery = EnhancedComponent => {
-  const WithTransactionQuery = props => {
+const withIncomeQuery = EnhancedComponent => {
+  const WithIncomeQuery = props => {
     const queryDate = new Date();
     const defaultYear = queryDate.getFullYear();
     const {
@@ -21,7 +21,7 @@ const withTransactionQuery = EnhancedComponent => {
     const monthIndex = monthsOfYear[month] || queryDate.getMonth();
     return (
       <Query
-        query={GET_TRANSACTIONS}
+        query={GET_INCOMES}
         variables={{
           year: Number(year),
           month: Number(monthIndex)
@@ -30,14 +30,14 @@ const withTransactionQuery = EnhancedComponent => {
         {({ data, loading, error }) => {
           if (loading) return <Loading />;
           if (error) return <h2>Error :(</h2>;
-          const { transactions } = data;
-          return <EnhancedComponent {...props} transactions={transactions} />;
+          const { incomes } = data;
+          return <EnhancedComponent {...props} incomes={incomes} />;
         }}
       </Query>
     );
   };
 
-  WithTransactionQuery.propTypes = {
+  WithIncomeQuery.propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
         year: PropTypes.string,
@@ -46,7 +46,7 @@ const withTransactionQuery = EnhancedComponent => {
     }).isRequired
   };
 
-  return hoistNonReactStatics(WithTransactionQuery, EnhancedComponent);
+  return hoistNonReactStatics(WithIncomeQuery, EnhancedComponent);
 };
 
-export default withTransactionQuery;
+export default withIncomeQuery;

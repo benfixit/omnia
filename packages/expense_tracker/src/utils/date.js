@@ -13,3 +13,20 @@ export const monthsOfYear = {
   november: 10,
   december: 11
 };
+
+export const getDateYear = () => {
+  const date = new Date();
+  return date.getFullYear();
+};
+
+export const getDateMonth = () => {
+  const date = new Date();
+  return date.getDate() > 24 ? date.getMonth() + 1 : date.getMonth();
+};
+
+export const getDate = () => {
+  const date = new Date();
+  const month = getDateMonth();
+  date.setMonth(month);
+  return JSON.stringify(date).slice(1, 11);
+};

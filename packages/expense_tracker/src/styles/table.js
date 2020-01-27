@@ -16,6 +16,7 @@ const Td = styled.td`
   border: thin solid #888888;
   padding: 5px;
   text-align: right;
+  min-width: 80px;
   color: ${props => {
     if (props.status === 'negative') {
       return '#990000';
@@ -33,6 +34,7 @@ const Th = styled.th`
   color: white;
   padding: 5px 2px;
   text-align: center;
+  min-width: 80px;
 `;
 
 export { Table, Td, Th };

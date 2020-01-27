@@ -1,33 +1,27 @@
 import gql from 'graphql-tag';
 
-export const GET_TRANSACTIONS = gql`
-  query TransactionList($year: Int, $month: Int) {
-    transactions(year: $year, month: $month) {
+export const GET_INCOMES = gql`
+  query IncomeList($year: Int, $month: Int) {
+    incomes(year: $year, month: $month) {
       _id
       amount
       description
       createdAt
-      category {
-        _id
-        title
-      }
     }
   }
 `;
 
-export const ADD_TRANSACTION = gql`
+export const ADD_INCOME = gql`
   mutation(
     $amount: Int
     $description: String
-    $category: ID!
     $year: Int
     $month: Int
     $day: Int
   ) {
-    createTransaction(
+    createIncome(
       amount: $amount
       description: $description
-      category: $category
       year: $year
       month: $month
       day: $day
@@ -38,10 +32,6 @@ export const ADD_TRANSACTION = gql`
       year
       month
       day
-      category {
-        _id
-        title
-      }
     }
   }
 `;

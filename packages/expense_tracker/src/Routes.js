@@ -1,9 +1,10 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Picasso from '@omnia/picasso';
 
-const Budgets = lazy(() => import('./components/Budgets'));
-const Transactions = lazy(() => import('./components/Transactions'));
+const Budgets = lazy(() => import('./components/Budgets/index'));
+const BudgetEdit = lazy(() => import('./components/Budgets/BudgetEdit'));
+const Home = lazy(() => import('./components/Home'));
 
 const { Loading } = Picasso;
 
@@ -12,9 +13,9 @@ const Routes = () => {
     <BrowserRouter>
       <Suspense fallback={<Loading />}>
         <Switch>
-          <Redirect exact from="/" to="/budgets" />
+          <Route exact path="/" component={Home} />
+          <Route path="/budgets/edit/:id" component={BudgetEdit} />
           <Route path="/budgets/:year?/:month?" component={Budgets} />
-          <Route path="/transactions/:year?/:month?" component={Transactions} />
         </Switch>
       </Suspense>
     </BrowserRouter>
