@@ -23,11 +23,13 @@ class BudgetEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      budget: '0',
-      actual: '0',
-      description: '',
-      date: getDate(),
-      category: ''
+      data: {
+        budget: '0',
+        actual: '0',
+        description: '',
+        date: getDate(),
+        category: ''
+      }
     };
   }
 
@@ -43,31 +45,39 @@ class BudgetEdit extends React.Component {
         variables: { _id: id }
       })
       .then(response => {
+        const { data } = this.state;
         const { budget } = response.data;
         const {
           category: { _id: categoryId }
         } = budget;
         this.setState({
-          budget: budget.budget,
-          actual: budget.actual,
-          description: budget.description,
-          category: categoryId
+          data: {
+            ...data,
+            budget: budget.budget,
+            actual: budget.actual,
+            description: budget.description,
+            category: categoryId,
+            date: getDate(budget.year, budget.month, budget.day)
+          }
         });
       });
   }
 
   handleChange = event => {
+    const { data } = this.state;
     const {
       target: { name, value }
     } = event;
     this.setState({
-      [name]: value
+      data: { ...data, [name]: value }
     });
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    const { budget, actual, description, category, date } = this.state;
+    const {
+      data: { budget, actual, description, category, date }
+    } = this.state;
     const budgetDate = new Date(date);
     const {
       mutate,
@@ -91,7 +101,9 @@ class BudgetEdit extends React.Component {
   };
 
   render() {
-    const { budget, actual, description, category, date } = this.state;
+    const {
+      data: { budget, actual, description, category, date }
+    } = this.state;
     const { categories } = this.props;
     const { handleChange, handleSubmit } = this;
     return (

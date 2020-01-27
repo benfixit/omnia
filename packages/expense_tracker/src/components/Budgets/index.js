@@ -56,11 +56,13 @@ class Budgets extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      budget: '0',
-      actual: '0',
-      description: '',
-      date: getDate(),
-      category: '',
+      budgetObject: {
+        budget: '0',
+        actual: '0',
+        description: '',
+        date: getDate(),
+        category: ''
+      },
       showModal: false
     };
   }
@@ -78,17 +80,20 @@ class Budgets extends Component {
   };
 
   handleChange = event => {
+    const { budgetObject } = this.state;
     const {
       target: { name, value }
     } = event;
     this.setState({
-      [name]: value
+      budgetObject: { ...budgetObject, [name]: value }
     });
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    const { budget, actual, description, category, date } = this.state;
+    const {
+      budgetObject: { date, budget, actual, description, category }
+    } = this.state;
     const budgetDate = new Date(date);
     const { mutate } = this.props;
     mutate({
@@ -110,14 +115,7 @@ class Budgets extends Component {
   };
 
   render() {
-    const {
-      budget,
-      actual,
-      description,
-      category,
-      date,
-      showModal
-    } = this.state;
+    const { budgetObject, showModal } = this.state;
     const {
       handleChange,
       handleSubmit,
@@ -155,11 +153,7 @@ class Budgets extends Component {
         <BudgetTable budgets={budgets} />
         <BudgetModal
           showModal={showModal}
-          date={date}
-          budget={budget}
-          actual={actual}
-          description={description}
-          category={category}
+          budgetObject={budgetObject}
           categories={categories}
           handleChange={handleChange}
           handleCloseModal={handleCloseModal}

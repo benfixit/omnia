@@ -24,9 +24,23 @@ export const getDateMonth = () => {
   return date.getDate() > 24 ? date.getMonth() + 1 : date.getMonth();
 };
 
-export const getDate = () => {
+export const getDate = (
+  year = getDateYear(),
+  month = getDateMonth(),
+  day = 1
+) => {
   const date = new Date();
-  const month = getDateMonth();
+  date.setFullYear(year);
   date.setMonth(month);
+  date.setDate(day);
   return JSON.stringify(date).slice(1, 11);
+};
+
+export const getQueryYearAndMonth = (year = getDateYear(), month) => {
+  const monthIndex =
+    monthsOfYear[month] === undefined ? getDateMonth() : monthsOfYear[month];
+  return {
+    year: Number(year),
+    month: Number(monthIndex)
+  };
 };

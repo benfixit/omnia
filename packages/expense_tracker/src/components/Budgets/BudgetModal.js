@@ -9,11 +9,7 @@ const { DateField, InputField, Modal, SelectField } = Picasso;
 const BudgetModal = props => {
   const {
     showModal,
-    date,
-    budget,
-    actual,
-    description,
-    category,
+    budgetObject: { date, budget, actual, description, category },
     categories,
     handleChange,
     handleCloseModal,
@@ -75,11 +71,13 @@ const BudgetModal = props => {
 
 BudgetModal.propTypes = {
   showModal: PropTypes.bool.isRequired,
-  date: PropTypes.string.isRequired,
-  budget: PropTypes.string.isRequired,
-  actual: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  category: PropTypes.string.isRequired,
+  budgetObject: PropTypes.shape({
+    date: PropTypes.string,
+    budget: PropTypes.string,
+    actual: PropTypes.string,
+    description: PropTypes.string,
+    category: PropTypes.string
+  }).isRequired,
   categories: PropTypes.instanceOf(Array).isRequired,
   handleCloseModal: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,

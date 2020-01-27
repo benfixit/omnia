@@ -5,7 +5,7 @@ import { Query } from 'react-apollo';
 import Picasso from '@omnia/picasso';
 
 import { GET_BUDGETS } from '../graphql/budgets';
-import { monthsOfYear, getDateYear, getDateMonth } from '../utils/date';
+import { getQueryYearAndMonth } from '../utils/date';
 
 const { Loading } = Picasso;
 
@@ -13,19 +13,11 @@ const withBudgetQuery = EnhancedComponent => {
   const WithBudgetQuery = props => {
     const {
       match: {
-        params: { year = getDateYear(), month }
+        params: { year, month }
       }
     } = props;
-    const monthIndex =
-      monthsOfYear[month] === undefined ? getDateMonth() : monthsOfYear[month];
     return (
-      <Query
-        query={GET_BUDGETS}
-        variables={{
-          year: Number(year),
-          month: Number(monthIndex)
-        }}
-      >
+      <Query query={GET_BUDGETS} variables={getQueryYearAndMonth(year, month)}>
         {({ data, loading, error }) => {
           if (loading) return <Loading />;
           if (error) return <h2>Error :(</h2>;
