@@ -5,7 +5,7 @@ import { Query } from 'react-apollo';
 import Picasso from '@omnia/picasso';
 
 import { GET_INCOMES } from '../graphql/incomes';
-import { monthsOfYear } from '../utils/date';
+import { getQueryYearAndMonth } from '../utils/date';
 
 const { Loading } = Picasso;
 
@@ -18,15 +18,8 @@ const withIncomeQuery = EnhancedComponent => {
         params: { year = defaultYear, month }
       }
     } = props;
-    const monthIndex = monthsOfYear[month] || queryDate.getMonth();
     return (
-      <Query
-        query={GET_INCOMES}
-        variables={{
-          year: Number(year),
-          month: Number(monthIndex)
-        }}
-      >
+      <Query query={GET_INCOMES} variables={getQueryYearAndMonth(year, month)}>
         {({ data, loading, error }) => {
           if (loading) return <Loading />;
           if (error) return <h2>Error :(</h2>;
