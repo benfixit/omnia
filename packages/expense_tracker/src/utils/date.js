@@ -21,7 +21,7 @@ export const getDateYear = () => {
 
 export const getDateMonth = () => {
   const date = new Date();
-  return date.getDate() > 24 ? date.getMonth() + 1 : date.getMonth();
+  return date.getDate() < 24 ? date.getMonth() : date.getMonth() + 1;
 };
 
 export const getDate = (
@@ -42,5 +42,45 @@ export const getQueryYearAndMonth = (year = getDateYear(), month) => {
   return {
     year: Number(year),
     month: Number(monthIndex)
+  };
+};
+
+/** ************ SAVINGS AND INCOME HELPERS ******************* */
+
+export const getSavingsAndIncomeYearAndMonth = (
+  year = getDateYear(),
+  month
+) => {
+  const monthIndex =
+    monthsOfYear[month] === undefined ? getDateMonth() : monthsOfYear[month];
+  return {
+    year: Number(year),
+    month: Number(monthIndex)
+  };
+};
+
+export const getMonthAndYear = () => {
+  const date = new Date();
+
+  if (date.getDate() < 24) {
+    date.setMonth(date.getMonth() - 1);
+  }
+
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth()
+  };
+};
+
+export const getPreviousMonthAndYear = () => {
+  const date = new Date();
+
+  if (date.getDate() < 24) {
+    date.setMonth(date.getMonth() - 1);
+  }
+
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth()
   };
 };

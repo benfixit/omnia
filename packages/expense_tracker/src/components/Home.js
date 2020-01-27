@@ -8,8 +8,10 @@ import Picasso from '@omnia/picasso';
 import Layout from './Layout';
 import { Table } from '../styles';
 import { formatter, getDecimalNumber } from '../utils/money';
+import { getMonthAndYear } from '../utils/date';
 import withExpenseQuery from '../hoc/withExpenseQuery';
 import withIncomeQuery from '../hoc/withIncomeQuery';
+import withSavingsQuery from '../hoc/withSavingsQuery';
 
 const { Heading, Pane } = Picasso;
 
@@ -39,10 +41,10 @@ const StyledHeading = styled(Heading)`
 `;
 
 const Home = props => {
-  const { expenses, incomes } = props;
+  const { expenses, incomes, savings } = props;
 
   const incomesTotal = incomes.reduce(
-    (acc, item) => acc + getDecimalNumber(item.budget),
+    (acc, item) => acc + getDecimalNumber(item.amount),
     0
   );
 
@@ -51,18 +53,15 @@ const Home = props => {
     0
   );
 
-  const actualBudgetsTotal = expenses.reduce(
+  const actualExpensesTotal = expenses.reduce(
     (acc, item) => acc + Number(item.actual),
     0
   );
 
-  const estimatedSavings = expenses
-    .filter(item => item.category.title === 'Savings')
-    .reduce((acc, item) => acc + Number(item.budget), 0);
-
-  const actualSavings = expenses
-    .filter(item => item.category.title === 'Savings')
-    .reduce((acc, item) => acc + Number(item.actual), 0);
+  const savingsTotal = savings.reduce(
+    (acc, item) => acc + getDecimalNumber(item.amount),
+    0
+  );
 
   return (
     <Layout>
@@ -71,26 +70,28 @@ const Home = props => {
         <Table.Table>
           <tbody>
             <tr>
-              <Th>Income</Th>
+              <Th>Income (January)</Th>
               <Td>{formatter.format(incomesTotal)}</Td>
             </tr>
             <tr>
-              <Th>Budget (Estimated Expenses)</Th>
-              <Td>
-                {formatter.format(budgetedExpensesTotal - estimatedSavings)}
-              </Td>
+              <Th>Estimated Expenses</Th>
+              <Td>{formatter.format(budgetedExpensesTotal)}</Td>
             </tr>
             <tr>
-              <Th>Budget (Savings)</Th>
-              <Td>{formatter.format(estimatedSavings)}</Td>
+              <Th>Savings (January)</Th>
+              <Td>{formatter.format(savingsTotal)}</Td>
             </tr>
             <tr>
               <Th>Bank Balance</Th>
-              <Td>{formatter.format(incomesTotal - budgetedExpensesTotal)}</Td>
+              <Td>
+                {formatter.format(
+                  incomesTotal - budgetedExpensesTotal - savingsTotal
+                )}
+              </Td>
             </tr>
             <tr>
               <Th>Savings Balance</Th>
-              <Td>{formatter.format(2800000 + estimatedSavings)}</Td>
+              <Td>{formatter.format(2800000 + savingsTotal)}</Td>
             </tr>
           </tbody>
         </Table.Table>
@@ -105,19 +106,19 @@ const Home = props => {
             </tr>
             <tr>
               <Th>Budget (Actual Expenses)</Th>
-              <Td>{formatter.format(actualBudgetsTotal - actualSavings)}</Td>
+              <Td>{formatter.format(actualExpensesTotal)}</Td>
             </tr>
             <tr>
-              <Th>Budget (Savings)</Th>
-              <Td>{formatter.format(actualSavings)}</Td>
+              <Th>Budget (Actual Savings)</Th>
+              <Td>{formatter.format(savingsTotal)}</Td>
             </tr>
             <tr>
               <Th>Bank Balance</Th>
-              <Td>{formatter.format(incomesTotal - actualBudgetsTotal)}</Td>
+              <Td>{formatter.format(incomesTotal - budgetedExpensesTotal)}</Td>
             </tr>
             <tr>
               <Th>Savings Balance</Th>
-              <Td>{formatter.format(2800000 + actualSavings)}</Td>
+              <Td>{formatter.format(2800000 + savingsTotal)}</Td>
             </tr>
           </tbody>
         </Table.Table>
@@ -128,7 +129,13 @@ const Home = props => {
 
 Home.propTypes = {
   expenses: PropTypes.instanceOf(Array).isRequired,
-  incomes: PropTypes.instanceOf(Array).isRequired
+  incomes: PropTypes.instanceOf(Array).isRequired,
+  savings: PropTypes.instanceOf(Array).isRequired
 };
 
-export default compose(withRouter, withExpenseQuery, withIncomeQuery)(Home);
+export default compose(
+  withRouter,
+  withExpenseQuery,
+  withIncomeQuery(getMonthAndYear()),
+  withSavingsQuery(getMonthAndYear())
+)(Home);

@@ -6,6 +6,8 @@ const Expense = lazy(() => import('./components/Expense/index'));
 const EditExpense = lazy(() => import('./components/Expense/EditExpense'));
 const Income = lazy(() => import('./components/Income/index'));
 const EditIncome = lazy(() => import('./components/Income/EditIncome'));
+const Savings = lazy(() => import('./components/Savings/index'));
+const EditSavings = lazy(() => import('./components/Savings/EditSavings'));
 const Home = lazy(() => import('./components/Home'));
 
 const { Loading } = Picasso;
@@ -20,6 +22,8 @@ const Routes = () => {
           <Route path="/expenses/:year?/:month?" component={Expense} />
           <Route path="/incomes/edit/:id" component={EditIncome} />
           <Route path="/incomes/:year?/:month?" component={Income} />
+          <Route path="/savings/edit/:id" component={EditSavings} />
+          <Route path="/savings/:year?/:month?" component={Savings} />
         </Switch>
       </Suspense>
     </BrowserRouter>

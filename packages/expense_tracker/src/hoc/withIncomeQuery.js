@@ -6,20 +6,29 @@ import Picasso from '@omnia/picasso';
 
 import { GET_INCOMES } from '../graphql/incomes';
 import { getQueryYearAndMonth } from '../utils/date';
+import { falseyCheck } from '../utils/number';
 
 const { Loading } = Picasso;
 
-const withIncomeQuery = EnhancedComponent => {
+const withIncomeQuery = (period = {}) => EnhancedComponent => {
   const WithIncomeQuery = props => {
     const queryDate = new Date();
     const defaultYear = queryDate.getFullYear();
     const {
       match: {
-        params: { year = defaultYear, month }
+        params: { year: paramYear = defaultYear, month: paramMonth }
       }
     } = props;
+    const { year: periodYear, month: periodMonth } = period;
+
     return (
-      <Query query={GET_INCOMES} variables={getQueryYearAndMonth(year, month)}>
+      <Query
+        query={GET_INCOMES}
+        variables={{
+          year: falseyCheck(periodYear, getQueryYearAndMonth(paramYear)),
+          month: falseyCheck(periodMonth, getQueryYearAndMonth(paramMonth))
+        }}
+      >
         {({ data, loading, error }) => {
           if (loading) return <Loading />;
           if (error) return <h2>Error :(</h2>;

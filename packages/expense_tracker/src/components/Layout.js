@@ -45,6 +45,7 @@ const Layout = props => {
           <NavLink to="/">Home</NavLink>
           <NavLink to="/expenses">Expenses</NavLink>
           <NavLink to="/incomes">Incomes</NavLink>
+          <NavLink to="/savings">Savings</NavLink>
         </NavUl>
       </NavRow>
       {children}

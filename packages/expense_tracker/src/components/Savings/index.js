@@ -173,5 +173,5 @@ Savings.defaultProps = {
 export default compose(
   withRouter,
   graphql(ADD_SAVING),
-  withSavingsQuery()
+  withSavingsQuery
 )(Savings);

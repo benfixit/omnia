@@ -16,7 +16,7 @@ import {
   StyledButton,
   StyledHeading
 } from '../../styles';
-import { monthsOfYear, getDate } from '../../utils/date';
+import { monthsOfYear, getDate, getMonthAndYear } from '../../utils/date';
 import { setDecimalNumber } from '../../utils/money';
 import { ADD_INCOME, GET_INCOMES } from '../../graphql/incomes';
 import withIncomeQuery from '../../hoc/withIncomeQuery';
@@ -173,5 +173,5 @@ Income.defaultProps = {
 export default compose(
   withRouter,
   graphql(ADD_INCOME),
-  withIncomeQuery
+  withIncomeQuery(getMonthAndYear())
 )(Income);
