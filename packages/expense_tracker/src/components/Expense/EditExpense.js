@@ -8,7 +8,11 @@ import Picasso from '@omnia/picasso';
 
 import client from '../../apollo/client';
 import { FormButton, StyledForm } from '../../styles';
-import { EDIT_BUDGET, GET_BUDGET } from '../../graphql/budgets';
+import {
+  EDIT_EXPENSE,
+  GET_EXPENSE,
+  GET_EXPENSES
+} from '../../graphql/expenses';
 import withCategoryQuery from '../../hoc/withCategoryQuery';
 import { getDate } from '../../utils/date';
 
@@ -19,7 +23,7 @@ const Container = styled(Pane)`
   padding: 15px 10px;
 `;
 
-class BudgetEdit extends React.Component {
+class EditExpense extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,23 +45,23 @@ class BudgetEdit extends React.Component {
     } = this.props;
     client
       .query({
-        query: GET_BUDGET,
+        query: GET_EXPENSE,
         variables: { _id: id }
       })
       .then(response => {
         const { data } = this.state;
-        const { budget } = response.data;
+        const { expense } = response.data;
         const {
           category: { _id: categoryId }
-        } = budget;
+        } = expense;
         this.setState({
           data: {
             ...data,
-            budget: budget.budget,
-            actual: budget.actual,
-            description: budget.description,
+            budget: expense.budget,
+            actual: expense.actual,
+            description: expense.description,
             category: categoryId,
-            date: getDate(budget.year, budget.month, budget.day)
+            date: getDate(expense.year, expense.month, expense.day)
           }
         });
       });
@@ -78,7 +82,7 @@ class BudgetEdit extends React.Component {
     const {
       data: { budget, actual, description, category, date }
     } = this.state;
-    const budgetDate = new Date(date);
+    const expenseDate = new Date(date);
     const {
       mutate,
       history,
@@ -93,11 +97,16 @@ class BudgetEdit extends React.Component {
         actual: Number(actual),
         description,
         category,
-        year: Number(budgetDate.getFullYear()),
-        month: Number(budgetDate.getMonth()),
-        day: Number(budgetDate.getDate())
-      }
-    }).then(() => history.push('/budgets'));
+        year: Number(expenseDate.getFullYear()),
+        month: Number(expenseDate.getMonth()),
+        day: Number(expenseDate.getDate())
+      },
+      refetchQueries: [
+        {
+          query: GET_EXPENSES
+        }
+      ]
+    }).then(() => history.push('/expenses'));
   };
 
   render() {
@@ -156,7 +165,7 @@ class BudgetEdit extends React.Component {
   }
 }
 
-BudgetEdit.propTypes = {
+EditExpense.propTypes = {
   categories: PropTypes.instanceOf(Array).isRequired,
   mutate: PropTypes.func,
   match: PropTypes.shape({
@@ -169,12 +178,12 @@ BudgetEdit.propTypes = {
   }).isRequired
 };
 
-BudgetEdit.defaultProps = {
+EditExpense.defaultProps = {
   mutate: () => {}
 };
 
 export default compose(
   withRouter,
-  graphql(EDIT_BUDGET),
+  graphql(EDIT_EXPENSE),
   withCategoryQuery
-)(BudgetEdit);
+)(EditExpense);

@@ -6,10 +6,10 @@ import { FormButton, StyledForm } from '../../styles';
 
 const { DateField, InputField, Modal, SelectField } = Picasso;
 
-const BudgetModal = props => {
+const ExpenseModal = props => {
   const {
     showModal,
-    budgetObject: { date, budget, actual, description, category },
+    expenseObject: { date, budget, actual, description, category },
     categories,
     handleChange,
     handleCloseModal,
@@ -18,7 +18,7 @@ const BudgetModal = props => {
 
   return (
     <Modal show={showModal}>
-      <Modal.Header title="Budget" />
+      <Modal.Header title="Expense" />
       <Modal.Content>
         <StyledForm onSubmit={handleSubmit}>
           <SelectField
@@ -69,9 +69,9 @@ const BudgetModal = props => {
   );
 };
 
-BudgetModal.propTypes = {
+ExpenseModal.propTypes = {
   showModal: PropTypes.bool.isRequired,
-  budgetObject: PropTypes.shape({
+  expenseObject: PropTypes.shape({
     date: PropTypes.string,
     budget: PropTypes.string,
     actual: PropTypes.string,
@@ -84,4 +84,4 @@ BudgetModal.propTypes = {
   handleSubmit: PropTypes.func.isRequired
 };
 
-export default BudgetModal;
+export default ExpenseModal;

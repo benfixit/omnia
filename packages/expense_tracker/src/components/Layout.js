@@ -39,11 +39,11 @@ const Layout = props => {
     <LayoutStyle.Container>
       <NavRow>
         <NavH1>
-          <NavLink to="/">Expense Tracker</NavLink>
+          <NavLink to="/">Budget Tracker</NavLink>
         </NavH1>
         <NavUl>
           <NavLink to="/">Home</NavLink>
-          <NavLink to="/budgets">Budgets</NavLink>
+          <NavLink to="/expenses">Expenses</NavLink>
           <NavLink to="/incomes">Incomes</NavLink>
         </NavUl>
       </NavRow>

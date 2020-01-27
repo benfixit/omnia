@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export const GET_BUDGETS = gql`
-  query BudgetList($year: Int, $month: Int) {
-    budgets(year: $year, month: $month) {
+export const GET_EXPENSES = gql`
+  query ExpenseList($year: Int, $month: Int) {
+    expenses(year: $year, month: $month) {
       _id
       description
       budget
@@ -18,9 +18,9 @@ export const GET_BUDGETS = gql`
   }
 `;
 
-export const GET_BUDGET = gql`
-  query SingleBudget($_id: ID!) {
-    budget(_id: $_id) {
+export const GET_EXPENSE = gql`
+  query SingleExpense($_id: ID!) {
+    expense(_id: $_id) {
       _id
       description
       budget
@@ -36,8 +36,8 @@ export const GET_BUDGET = gql`
   }
 `;
 
-export const ADD_BUDGET = gql`
-  mutation AddBudget(
+export const ADD_EXPENSE = gql`
+  mutation AddExpense(
     $budget: Int
     $actual: Int
     $description: String
@@ -46,7 +46,7 @@ export const ADD_BUDGET = gql`
     $month: Int
     $day: Int
   ) {
-    createBudget(
+    createExpense(
       budget: $budget
       actual: $actual
       description: $description
@@ -70,8 +70,8 @@ export const ADD_BUDGET = gql`
   }
 `;
 
-export const EDIT_BUDGET = gql`
-  mutation EditBudget(
+export const EDIT_EXPENSE = gql`
+  mutation EditExpense(
     $_id: ID!
     $budget: Int
     $actual: Int
@@ -81,7 +81,7 @@ export const EDIT_BUDGET = gql`
     $month: Int
     $day: Int
   ) {
-    editBudget(
+    editExpense(
       _id: $_id
       budget: $budget
       actual: $actual

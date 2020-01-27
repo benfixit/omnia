@@ -25,15 +25,15 @@ const TableFooterTh = styled(Table.Th)`
   color: #000000;
 `;
 
-const BudgetTable = props => {
-  const { budgets } = props;
+const ExpenseTable = props => {
+  const { expenses } = props;
 
-  const expensesTotal = budgets.reduce(
+  const actualExpensesTotal = expenses.reduce(
     (acc, item) => acc + Number(item.actual),
     0
   );
 
-  const budgetsTotal = budgets.reduce(
+  const budgetedExpensesTotal = expenses.reduce(
     (acc, item) => acc + Number(item.budget),
     0
   );
@@ -52,15 +52,15 @@ const BudgetTable = props => {
           </tr>
         </thead>
         <tbody>
-          {budgets.map(budget => {
-            const difference = budget.budget - budget.actual;
-            const { _id: budgetId } = budget;
+          {expenses.map(expense => {
+            const difference = expense.budget - expense.actual;
+            const { _id: expenseId } = expense;
 
             return (
               <tr key={v4()}>
-                <TitleTableData>{budget.description}</TitleTableData>
-                <Table.Td>{formatter.format(budget.budget)}</Table.Td>
-                <Table.Td>{formatter.format(budget.actual)}</Table.Td>
+                <TitleTableData>{expense.description}</TitleTableData>
+                <Table.Td>{formatter.format(expense.budget)}</Table.Td>
+                <Table.Td>{formatter.format(expense.actual)}</Table.Td>
                 <Table.Td
                   status={Number(difference) > 0 ? 'positive' : 'negative'}
                 >
@@ -68,9 +68,9 @@ const BudgetTable = props => {
                     ? formatter.format(Math.abs(difference))
                     : `(${formatter.format(Math.abs(difference))})`}
                 </Table.Td>
-                <Table.Td>{budget.category.title}</Table.Td>
+                <Table.Td>{expense.category.title}</Table.Td>
                 <Table.Td>
-                  <Link to={`/budgets/edit/${budgetId}`}>Edit</Link>
+                  <Link to={`/expenses/edit/${expenseId}`}>Edit</Link>
                 </Table.Td>
               </tr>
             );
@@ -79,10 +79,14 @@ const BudgetTable = props => {
         <tfoot>
           <tr>
             <TableFooterTh>Total</TableFooterTh>
-            <TableFooterTh>{formatter.format(budgetsTotal)}</TableFooterTh>
-            <TableFooterTh>{formatter.format(expensesTotal)}</TableFooterTh>
             <TableFooterTh>
-              {formatter.format(budgetsTotal - expensesTotal)}
+              {formatter.format(budgetedExpensesTotal)}
+            </TableFooterTh>
+            <TableFooterTh>
+              {formatter.format(actualExpensesTotal)}
+            </TableFooterTh>
+            <TableFooterTh>
+              {formatter.format(budgetedExpensesTotal - actualExpensesTotal)}
             </TableFooterTh>
             <TableFooterTh />
             <TableFooterTh />
@@ -93,8 +97,8 @@ const BudgetTable = props => {
   );
 };
 
-BudgetTable.propTypes = {
-  budgets: PropTypes.instanceOf(Array).isRequired
+ExpenseTable.propTypes = {
+  expenses: PropTypes.instanceOf(Array).isRequired
 };
 
-export default BudgetTable;
+export default ExpenseTable;

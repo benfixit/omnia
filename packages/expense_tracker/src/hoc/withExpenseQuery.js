@@ -4,31 +4,31 @@ import hoistNonReactStatics from 'hoist-non-react-statics';
 import { Query } from 'react-apollo';
 import Picasso from '@omnia/picasso';
 
-import { GET_BUDGETS } from '../graphql/budgets';
+import { GET_EXPENSES } from '../graphql/expenses';
 import { getQueryYearAndMonth } from '../utils/date';
 
 const { Loading } = Picasso;
 
-const withBudgetQuery = EnhancedComponent => {
-  const WithBudgetQuery = props => {
+const withExpenseQuery = EnhancedComponent => {
+  const WithExpenseQuery = props => {
     const {
       match: {
         params: { year, month }
       }
     } = props;
     return (
-      <Query query={GET_BUDGETS} variables={getQueryYearAndMonth(year, month)}>
+      <Query query={GET_EXPENSES} variables={getQueryYearAndMonth(year, month)}>
         {({ data, loading, error }) => {
           if (loading) return <Loading />;
           if (error) return <h2>Error :(</h2>;
-          const { budgets } = data;
-          return <EnhancedComponent {...props} budgets={budgets} />;
+          const { expenses } = data;
+          return <EnhancedComponent {...props} expenses={expenses} />;
         }}
       </Query>
     );
   };
 
-  WithBudgetQuery.propTypes = {
+  WithExpenseQuery.propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
         year: PropTypes.string,
@@ -37,7 +37,7 @@ const withBudgetQuery = EnhancedComponent => {
     }).isRequired
   };
 
-  return hoistNonReactStatics(WithBudgetQuery, EnhancedComponent);
+  return hoistNonReactStatics(WithExpenseQuery, EnhancedComponent);
 };
 
-export default withBudgetQuery;
+export default withExpenseQuery;

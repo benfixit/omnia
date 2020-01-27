@@ -8,12 +8,12 @@ import { Link } from 'react-router-dom';
 import compose from 'lodash/fp/compose';
 import Picasso from '@omnia/picasso';
 
-import BudgetModal from './BudgetModal';
-import BudgetTable from './BudgetTable';
+import ExpenseModal from './ExpenseModal';
+import ExpenseTable from './ExpenseTable';
 
 import withCategoryQuery from '../../hoc/withCategoryQuery';
-import withBudgetQuery from '../../hoc/withBudgetQuery';
-import { ADD_BUDGET, GET_BUDGETS } from '../../graphql/budgets';
+import withExpenseQuery from '../../hoc/withExpenseQuery';
+import { ADD_EXPENSE, GET_EXPENSES } from '../../graphql/expenses';
 import Layout from '../Layout';
 import {
   Layout as LayoutStyle,
@@ -24,7 +24,7 @@ import { monthsOfYear, getDate } from '../../utils/date';
 
 const { Pane } = Picasso;
 
-const BudgetsRow = styled(Pane)`
+const ExpensesRow = styled(Pane)`
   justify-content: space-between;
   padding: 14px 30px;
 `;
@@ -52,11 +52,11 @@ const NavUl = styled.ul`
   align-items: center;
 `;
 
-class Budgets extends Component {
+class Expense extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      budgetObject: {
+      expenseObject: {
         budget: '0',
         actual: '0',
         description: '',
@@ -80,21 +80,21 @@ class Budgets extends Component {
   };
 
   handleChange = event => {
-    const { budgetObject } = this.state;
+    const { expenseObject } = this.state;
     const {
       target: { name, value }
     } = event;
     this.setState({
-      budgetObject: { ...budgetObject, [name]: value }
+      expenseObject: { ...expenseObject, [name]: value }
     });
   };
 
   handleSubmit = event => {
     event.preventDefault();
     const {
-      budgetObject: { date, budget, actual, description, category }
+      expenseObject: { date, budget, actual, description, category }
     } = this.state;
-    const budgetDate = new Date(date);
+    const expenseDate = new Date(date);
     const { mutate } = this.props;
     mutate({
       variables: {
@@ -102,20 +102,20 @@ class Budgets extends Component {
         actual: Number(actual),
         description,
         category,
-        year: Number(budgetDate.getFullYear()),
-        month: Number(budgetDate.getMonth()),
-        day: Number(budgetDate.getDate())
+        year: Number(expenseDate.getFullYear()),
+        month: Number(expenseDate.getMonth()),
+        day: Number(expenseDate.getDate())
       },
       refetchQueries: [
         {
-          query: GET_BUDGETS
+          query: GET_EXPENSES
         }
       ]
     });
   };
 
   render() {
-    const { budgetObject, showModal } = this.state;
+    const { expenseObject, showModal } = this.state;
     const {
       handleChange,
       handleSubmit,
@@ -124,7 +124,7 @@ class Budgets extends Component {
     } = this;
     const {
       categories,
-      budgets,
+      expenses,
       match: { url }
     } = this.props;
 
@@ -146,14 +146,14 @@ class Budgets extends Component {
             })}
           </NavUl>
         </LowerNavRow>
-        <BudgetsRow>
-          <StyledHeading>Budget</StyledHeading>
-          <StyledButton onClick={handleOpenModal}>Add Budget</StyledButton>
-        </BudgetsRow>
-        <BudgetTable budgets={budgets} />
-        <BudgetModal
+        <ExpensesRow>
+          <StyledHeading>Expenses</StyledHeading>
+          <StyledButton onClick={handleOpenModal}>Add Expense</StyledButton>
+        </ExpensesRow>
+        <ExpenseTable expenses={expenses} />
+        <ExpenseModal
           showModal={showModal}
-          budgetObject={budgetObject}
+          expenseObject={expenseObject}
           categories={categories}
           handleChange={handleChange}
           handleCloseModal={handleCloseModal}
@@ -164,22 +164,22 @@ class Budgets extends Component {
   }
 }
 
-Budgets.propTypes = {
+Expense.propTypes = {
   categories: PropTypes.instanceOf(Array).isRequired,
-  budgets: PropTypes.instanceOf(Array).isRequired,
+  expenses: PropTypes.instanceOf(Array).isRequired,
   match: PropTypes.shape({
     url: PropTypes.string
   }).isRequired,
   mutate: PropTypes.func
 };
 
-Budgets.defaultProps = {
+Expense.defaultProps = {
   mutate: () => {}
 };
 
 export default compose(
   withRouter,
-  graphql(ADD_BUDGET),
+  graphql(ADD_EXPENSE),
   withCategoryQuery,
-  withBudgetQuery
-)(Budgets);
+  withExpenseQuery
+)(Expense);

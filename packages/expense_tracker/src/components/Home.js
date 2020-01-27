@@ -7,8 +7,9 @@ import Picasso from '@omnia/picasso';
 
 import Layout from './Layout';
 import { Table } from '../styles';
-import { formatter } from '../utils/money';
-import withBudgetQuery from '../hoc/withBudgetQuery';
+import { formatter, getDecimalNumber } from '../utils/money';
+import withExpenseQuery from '../hoc/withExpenseQuery';
+import withIncomeQuery from '../hoc/withIncomeQuery';
 
 const { Heading, Pane } = Picasso;
 
@@ -38,21 +39,31 @@ const StyledHeading = styled(Heading)`
 `;
 
 const Home = props => {
-  const { budgets } = props;
-  const estimatedBudgetsTotal = budgets.reduce(
+  const { expenses, incomes } = props;
+
+  const incomesTotal = incomes.reduce(
+    (acc, item) => acc + getDecimalNumber(item.budget),
+    0
+  );
+
+  const budgetedExpensesTotal = expenses.reduce(
     (acc, item) => acc + Number(item.budget),
     0
   );
-  const estimatedSavings = budgets
-    .filter(item => item.category.title === 'Savings')
-    .reduce((acc, item) => acc + Number(item.budget), 0);
-  const actualBudgetsTotal = budgets.reduce(
+
+  const actualBudgetsTotal = expenses.reduce(
     (acc, item) => acc + Number(item.actual),
     0
   );
-  const actualSavings = budgets
+
+  const estimatedSavings = expenses
+    .filter(item => item.category.title === 'Savings')
+    .reduce((acc, item) => acc + Number(item.budget), 0);
+
+  const actualSavings = expenses
     .filter(item => item.category.title === 'Savings')
     .reduce((acc, item) => acc + Number(item.actual), 0);
+
   return (
     <Layout>
       <StyledHeading>Summary (February) - Estimated</StyledHeading>
@@ -61,12 +72,12 @@ const Home = props => {
           <tbody>
             <tr>
               <Th>Income</Th>
-              <Td>{formatter.format(750000)}</Td>
+              <Td>{formatter.format(incomesTotal)}</Td>
             </tr>
             <tr>
               <Th>Budget (Estimated Expenses)</Th>
               <Td>
-                {formatter.format(estimatedBudgetsTotal - estimatedSavings)}
+                {formatter.format(budgetedExpensesTotal - estimatedSavings)}
               </Td>
             </tr>
             <tr>
@@ -75,7 +86,7 @@ const Home = props => {
             </tr>
             <tr>
               <Th>Bank Balance</Th>
-              <Td>{formatter.format(750000 - estimatedBudgetsTotal)}</Td>
+              <Td>{formatter.format(incomesTotal - budgetedExpensesTotal)}</Td>
             </tr>
             <tr>
               <Th>Savings Balance</Th>
@@ -90,7 +101,7 @@ const Home = props => {
           <tbody>
             <tr>
               <Th>Income</Th>
-              <Td>{formatter.format(750000)}</Td>
+              <Td>{formatter.format(incomesTotal)}</Td>
             </tr>
             <tr>
               <Th>Budget (Actual Expenses)</Th>
@@ -102,7 +113,7 @@ const Home = props => {
             </tr>
             <tr>
               <Th>Bank Balance</Th>
-              <Td>{formatter.format(750000 - actualBudgetsTotal)}</Td>
+              <Td>{formatter.format(incomesTotal - actualBudgetsTotal)}</Td>
             </tr>
             <tr>
               <Th>Savings Balance</Th>
@@ -116,7 +127,8 @@ const Home = props => {
 };
 
 Home.propTypes = {
-  budgets: PropTypes.instanceOf(Array).isRequired
+  expenses: PropTypes.instanceOf(Array).isRequired,
+  incomes: PropTypes.instanceOf(Array).isRequired
 };
 
-export default compose(withRouter, withBudgetQuery)(Home);
+export default compose(withRouter, withExpenseQuery, withIncomeQuery)(Home);
