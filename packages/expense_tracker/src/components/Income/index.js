@@ -51,7 +51,7 @@ const NavUl = styled.ul`
   align-items: center;
 `;
 
-class Incomes extends Component {
+class Income extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -158,7 +158,7 @@ class Incomes extends Component {
   }
 }
 
-Incomes.propTypes = {
+Income.propTypes = {
   match: PropTypes.shape({
     url: PropTypes.string
   }).isRequired,
@@ -166,7 +166,7 @@ Incomes.propTypes = {
   mutate: PropTypes.func
 };
 
-Incomes.defaultProps = {
+Income.defaultProps = {
   mutate: () => {}
 };
 
@@ -174,4 +174,4 @@ export default compose(
   withRouter,
   graphql(ADD_INCOME),
   withIncomeQuery
-)(Incomes);
+)(Income);

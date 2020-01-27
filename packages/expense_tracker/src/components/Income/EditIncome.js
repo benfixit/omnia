@@ -19,7 +19,7 @@ const Container = styled(Pane)`
   padding: 15px 10px;
 `;
 
-class IncomeEdit extends React.Component {
+class EditIncome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -124,7 +124,7 @@ class IncomeEdit extends React.Component {
   }
 }
 
-IncomeEdit.propTypes = {
+EditIncome.propTypes = {
   mutate: PropTypes.func,
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -136,8 +136,8 @@ IncomeEdit.propTypes = {
   }).isRequired
 };
 
-IncomeEdit.defaultProps = {
+EditIncome.defaultProps = {
   mutate: () => {}
 };
 
-export default compose(withRouter, graphql(EDIT_INCOME))(IncomeEdit);
+export default compose(withRouter, graphql(EDIT_INCOME))(EditIncome);
