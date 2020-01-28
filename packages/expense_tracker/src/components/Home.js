@@ -8,7 +8,8 @@ import Picasso from '@omnia/picasso';
 import Layout from './Layout';
 import { Table } from '../styles';
 import { formatter, getDecimalNumber } from '../utils/money';
-import { getMonthAndYear } from '../utils/date';
+import { getYearAndMonth, getSavingsIncomeMonthAndYear } from '../utils/date';
+import { INITIAL_MONEY_SAVED } from '../utils/constants';
 import withExpenseQuery from '../hoc/withExpenseQuery';
 import withIncomeQuery from '../hoc/withIncomeQuery';
 import withSavingsQuery from '../hoc/withSavingsQuery';
@@ -42,26 +43,43 @@ const StyledHeading = styled(Heading)`
 
 const Home = props => {
   const { expenses, incomes, savings } = props;
+  const expensePeriod = getYearAndMonth();
+  const savingsIncomePeriod = getSavingsIncomeMonthAndYear();
 
   const incomesTotal = incomes.reduce(
     (acc, item) => acc + getDecimalNumber(item.amount),
     0
   );
 
-  const budgetedExpensesTotal = expenses.reduce(
-    (acc, item) => acc + Number(item.budget),
-    0
-  );
+  const budgetedExpensesTotal = expenses
+    .filter(
+      item =>
+        item.year === expensePeriod.year && item.month === expensePeriod.month
+    )
+    .reduce((acc, item) => acc + getDecimalNumber(item.budget), 0);
 
-  const actualExpensesTotal = expenses.reduce(
-    (acc, item) => acc + Number(item.actual),
-    0
-  );
+  const actualExpensesTotal = expenses
+    .filter(
+      item =>
+        item.year === expensePeriod.year && item.month === expensePeriod.month
+    )
+    .reduce((acc, item) => acc + getDecimalNumber(item.actual), 0);
 
-  const savingsTotal = savings.reduce(
-    (acc, item) => acc + getDecimalNumber(item.amount),
-    0
-  );
+  const estimatedSavingsTotal = savings
+    .filter(
+      item =>
+        item.year === savingsIncomePeriod.year &&
+        item.month === savingsIncomePeriod.month
+    )
+    .reduce((acc, item) => acc + getDecimalNumber(item.amount), 0);
+
+  const actualSavingsTotal = savings
+    .filter(
+      item =>
+        item.year === savingsIncomePeriod.year &&
+        item.month === savingsIncomePeriod.month
+    )
+    .reduce((acc, item) => acc + getDecimalNumber(item.actual), 0);
 
   return (
     <Layout>
@@ -79,19 +97,21 @@ const Home = props => {
             </tr>
             <tr>
               <Th>Savings (January)</Th>
-              <Td>{formatter.format(savingsTotal)}</Td>
+              <Td>{formatter.format(estimatedSavingsTotal)}</Td>
             </tr>
             <tr>
               <Th>Bank Balance</Th>
               <Td>
                 {formatter.format(
-                  incomesTotal - budgetedExpensesTotal - savingsTotal
+                  incomesTotal - budgetedExpensesTotal - estimatedSavingsTotal
                 )}
               </Td>
             </tr>
             <tr>
               <Th>Savings Balance</Th>
-              <Td>{formatter.format(2800000 + savingsTotal)}</Td>
+              <Td>
+                {formatter.format(INITIAL_MONEY_SAVED + estimatedSavingsTotal)}
+              </Td>
             </tr>
           </tbody>
         </Table.Table>
@@ -110,15 +130,17 @@ const Home = props => {
             </tr>
             <tr>
               <Th>Budget (Actual Savings)</Th>
-              <Td>{formatter.format(savingsTotal)}</Td>
+              <Td>{formatter.format(actualSavingsTotal)}</Td>
             </tr>
             <tr>
               <Th>Bank Balance</Th>
-              <Td>{formatter.format(incomesTotal - budgetedExpensesTotal)}</Td>
+              <Td>{formatter.format(incomesTotal - actualExpensesTotal)}</Td>
             </tr>
             <tr>
               <Th>Savings Balance</Th>
-              <Td>{formatter.format(2800000 + savingsTotal)}</Td>
+              <Td>
+                {formatter.format(INITIAL_MONEY_SAVED + actualSavingsTotal)}
+              </Td>
             </tr>
           </tbody>
         </Table.Table>
@@ -136,6 +158,6 @@ Home.propTypes = {
 export default compose(
   withRouter,
   withExpenseQuery,
-  withIncomeQuery(getMonthAndYear()),
-  withSavingsQuery(getMonthAndYear())
+  withIncomeQuery,
+  withSavingsQuery
 )(Home);

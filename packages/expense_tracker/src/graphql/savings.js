@@ -5,7 +5,11 @@ export const GET_SAVINGS = gql`
     savings(year: $year, month: $month) {
       _id
       amount
+      actual
       description
+      year
+      month
+      day
       createdAt
     }
   }
@@ -17,6 +21,7 @@ export const GET_SAVING = gql`
       _id
       description
       amount
+      actual
       year
       month
       day
@@ -27,6 +32,7 @@ export const GET_SAVING = gql`
 export const ADD_SAVING = gql`
   mutation(
     $amount: Int
+    $actual: Int
     $description: String
     $year: Int
     $month: Int
@@ -34,6 +40,7 @@ export const ADD_SAVING = gql`
   ) {
     createSaving(
       amount: $amount
+      actual: $actual
       description: $description
       year: $year
       month: $month
@@ -53,6 +60,7 @@ export const EDIT_SAVING = gql`
   mutation EditSaving(
     $_id: ID!
     $amount: Int
+    $actual: Int
     $description: String
     $year: Int
     $month: Int
@@ -61,6 +69,7 @@ export const EDIT_SAVING = gql`
     editSaving(
       _id: $_id
       amount: $amount
+      actual: $actual
       description: $description
       year: $year
       month: $month

@@ -25,6 +25,7 @@ class EditSavings extends React.Component {
     this.state = {
       data: {
         amount: '0',
+        actual: '0',
         description: '',
         date: getDate()
       }
@@ -49,6 +50,7 @@ class EditSavings extends React.Component {
           data: {
             ...data,
             amount: getDecimalNumber(saving.amount),
+            actual: getDecimalNumber(saving.actual),
             description: saving.description,
             date: getDate(saving.year, saving.month, saving.day)
           }
@@ -69,7 +71,7 @@ class EditSavings extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     const {
-      data: { amount, description, date }
+      data: { amount, actual, description, date }
     } = this.state;
     const savingsDate = new Date(date);
     const {
@@ -83,6 +85,7 @@ class EditSavings extends React.Component {
       variables: {
         _id: id,
         amount: setDecimalNumber(amount),
+        actual: setDecimalNumber(actual),
         description,
         year: Number(savingsDate.getFullYear()),
         month: Number(savingsDate.getMonth()),
@@ -93,7 +96,7 @@ class EditSavings extends React.Component {
 
   render() {
     const {
-      data: { amount, description, date }
+      data: { amount, actual, description, date }
     } = this.state;
     const { handleChange, handleSubmit } = this;
     return (
@@ -104,6 +107,12 @@ class EditSavings extends React.Component {
             value={amount}
             onChange={handleChange}
             label="Amount"
+          />
+          <InputField
+            name="actual"
+            value={actual}
+            onChange={handleChange}
+            label="Actual"
           />
           <InputField
             name="description"

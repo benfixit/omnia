@@ -9,7 +9,7 @@ const { DateField, InputField, Modal } = Picasso;
 const SavingsModal = props => {
   const {
     showModal,
-    data: { amount, date, description },
+    data: { amount, actual, date, description },
     handleChange,
     handleCloseModal,
     handleSubmit
@@ -25,6 +25,12 @@ const SavingsModal = props => {
             value={amount}
             onChange={handleChange}
             label="Amount"
+          />
+          <InputField
+            name="actual"
+            value={actual}
+            onChange={handleChange}
+            label="Actual"
           />
           <InputField
             name="description"
@@ -51,6 +57,7 @@ SavingsModal.propTypes = {
   data: PropTypes.shape({
     date: PropTypes.string,
     amount: PropTypes.string,
+    actual: PropTypes.string,
     description: PropTypes.string
   }).isRequired,
   handleCloseModal: PropTypes.func.isRequired,

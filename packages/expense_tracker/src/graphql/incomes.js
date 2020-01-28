@@ -6,6 +6,9 @@ export const GET_INCOMES = gql`
       _id
       amount
       description
+      year
+      month
+      day
       createdAt
     }
   }

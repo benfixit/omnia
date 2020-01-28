@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import Picasso from '@omnia/picasso';
 
 import { Table } from '../../styles';
-import { formatter } from '../../utils/money';
+import { formatter, getDecimalNumber } from '../../utils/money';
 
 const { Pane } = Picasso;
 
@@ -29,12 +29,12 @@ const ExpenseTable = props => {
   const { expenses } = props;
 
   const actualExpensesTotal = expenses.reduce(
-    (acc, item) => acc + Number(item.actual),
+    (acc, item) => acc + getDecimalNumber(item.actual),
     0
   );
 
   const budgetedExpensesTotal = expenses.reduce(
-    (acc, item) => acc + Number(item.budget),
+    (acc, item) => acc + getDecimalNumber(item.budget),
     0
   );
 
@@ -53,14 +53,16 @@ const ExpenseTable = props => {
         </thead>
         <tbody>
           {expenses.map(expense => {
-            const difference = expense.budget - expense.actual;
+            const budgetedExpense = getDecimalNumber(expense.budget);
+            const actualExpense = getDecimalNumber(expense.actual);
+            const difference = budgetedExpense - actualExpense;
             const { _id: expenseId } = expense;
 
             return (
               <tr key={v4()}>
                 <TitleTableData>{expense.description}</TitleTableData>
-                <Table.Td>{formatter.format(expense.budget)}</Table.Td>
-                <Table.Td>{formatter.format(expense.actual)}</Table.Td>
+                <Table.Td>{formatter.format(budgetedExpense)}</Table.Td>
+                <Table.Td>{formatter.format(actualExpense)}</Table.Td>
                 <Table.Td
                   status={Number(difference) > 0 ? 'positive' : 'negative'}
                 >

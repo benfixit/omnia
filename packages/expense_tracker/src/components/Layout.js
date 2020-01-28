@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Picasso from '@omnia/picasso';
 import { Layout as LayoutStyle } from '../styles';
+import { getYearAndMonthText } from '../utils/date';
 
 const { Heading } = Picasso;
 
@@ -35,6 +36,7 @@ const NavLink = styled(Link)`
 
 const Layout = props => {
   const { children } = props;
+  const period = getYearAndMonthText();
   return (
     <LayoutStyle.Container>
       <NavRow>
@@ -43,9 +45,15 @@ const Layout = props => {
         </NavH1>
         <NavUl>
           <NavLink to="/">Home</NavLink>
-          <NavLink to="/expenses">Expenses</NavLink>
-          <NavLink to="/incomes">Incomes</NavLink>
-          <NavLink to="/savings">Savings</NavLink>
+          <NavLink to={`/expenses/${period.year}/${period.month}`}>
+            Expenses
+          </NavLink>
+          <NavLink to={`/incomes/${period.year}/${period.month}`}>
+            Incomes
+          </NavLink>
+          <NavLink to={`/savings/${period.year}/${period.month}`}>
+            Savings
+          </NavLink>
         </NavUl>
       </NavRow>
       {children}

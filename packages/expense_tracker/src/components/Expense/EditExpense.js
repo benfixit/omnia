@@ -15,6 +15,7 @@ import {
 } from '../../graphql/expenses';
 import withCategoryQuery from '../../hoc/withCategoryQuery';
 import { getDate } from '../../utils/date';
+import { setDecimalNumber, getDecimalNumber } from '../../utils/money';
 
 const { DateField, InputField, SelectField, Pane } = Picasso;
 
@@ -57,8 +58,8 @@ class EditExpense extends React.Component {
         this.setState({
           data: {
             ...data,
-            budget: expense.budget,
-            actual: expense.actual,
+            budget: getDecimalNumber(expense.budget),
+            actual: getDecimalNumber(expense.actual),
             description: expense.description,
             category: categoryId,
             date: getDate(expense.year, expense.month, expense.day)
@@ -93,8 +94,8 @@ class EditExpense extends React.Component {
     mutate({
       variables: {
         _id: id,
-        budget: Number(budget),
-        actual: Number(actual),
+        budget: setDecimalNumber(budget),
+        actual: setDecimalNumber(actual),
         description,
         category,
         year: Number(expenseDate.getFullYear()),

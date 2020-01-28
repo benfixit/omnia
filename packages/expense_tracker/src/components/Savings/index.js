@@ -57,6 +57,7 @@ class Savings extends Component {
     this.state = {
       data: {
         amount: '0',
+        actual: '0',
         description: '',
         date: getDate()
       },
@@ -89,14 +90,15 @@ class Savings extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const {
-      data: { date, description, amount }
+      data: { date, description, amount, actual }
     } = this.state;
 
     const savingsDate = new Date(date);
-    const { mutate } = this.props;
+    const { mutate, history } = this.props;
     mutate({
       variables: {
         amount: setDecimalNumber(amount),
+        actual: setDecimalNumber(actual),
         description,
         year: Number(savingsDate.getFullYear()),
         month: Number(savingsDate.getMonth()),
@@ -107,7 +109,7 @@ class Savings extends Component {
           query: GET_SAVINGS
         }
       ]
-    });
+    }).then(() => history.push('/savings'));
   };
 
   render() {
@@ -163,11 +165,10 @@ Savings.propTypes = {
     url: PropTypes.string
   }).isRequired,
   savings: PropTypes.instanceOf(Array).isRequired,
-  mutate: PropTypes.func
-};
-
-Savings.defaultProps = {
-  mutate: () => {}
+  mutate: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func
+  }).isRequired
 };
 
 export default compose(

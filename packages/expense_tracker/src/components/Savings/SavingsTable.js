@@ -28,8 +28,13 @@ const TableFooterTh = styled(Table.Th)`
 const SavingsTable = props => {
   const { savings } = props;
 
-  const savingsTotal = savings.reduce(
+  const estimatedSavingsTotal = savings.reduce(
     (acc, item) => acc + getDecimalNumber(item.amount),
+    0
+  );
+
+  const actualSavingsTotal = savings.reduce(
+    (acc, item) => acc + getDecimalNumber(item.actual),
     0
   );
 
@@ -40,6 +45,7 @@ const SavingsTable = props => {
           <tr>
             <Table.Th>Description</Table.Th>
             <Table.Th>Amount</Table.Th>
+            <Table.Th>Actual</Table.Th>
             <Table.Th>Action</Table.Th>
           </tr>
         </thead>
@@ -54,6 +60,9 @@ const SavingsTable = props => {
                   {formatter.format(getDecimalNumber(saving.amount))}
                 </Table.Td>
                 <Table.Td>
+                  {formatter.format(getDecimalNumber(saving.actual))}
+                </Table.Td>
+                <Table.Td>
                   <Link to={`/savings/edit/${savingsId}`}>Edit</Link>
                 </Table.Td>
               </tr>
@@ -63,7 +72,12 @@ const SavingsTable = props => {
         <tfoot>
           <tr>
             <TableFooterTh>Total</TableFooterTh>
-            <TableFooterTh>{formatter.format(savingsTotal)}</TableFooterTh>
+            <TableFooterTh>
+              {formatter.format(estimatedSavingsTotal)}
+            </TableFooterTh>
+            <TableFooterTh>
+              {formatter.format(actualSavingsTotal)}
+            </TableFooterTh>
             <TableFooterTh />
           </tr>
         </tfoot>

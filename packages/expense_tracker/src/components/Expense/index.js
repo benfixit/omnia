@@ -20,6 +20,7 @@ import {
   StyledButton,
   StyledHeading
 } from '../../styles';
+import { setDecimalNumber } from '../../utils/money';
 import { monthsOfYear, getDate } from '../../utils/date';
 
 const { Pane } = Picasso;
@@ -95,11 +96,11 @@ class Expense extends Component {
       expenseObject: { date, budget, actual, description, category }
     } = this.state;
     const expenseDate = new Date(date);
-    const { mutate } = this.props;
+    const { mutate, history } = this.props;
     mutate({
       variables: {
-        budget: Number(budget),
-        actual: Number(actual),
+        budget: setDecimalNumber(budget),
+        actual: setDecimalNumber(actual),
         description,
         category,
         year: Number(expenseDate.getFullYear()),
@@ -111,7 +112,7 @@ class Expense extends Component {
           query: GET_EXPENSES
         }
       ]
-    });
+    }).then(() => history.push('/expenses'));
   };
 
   render() {
@@ -170,11 +171,10 @@ Expense.propTypes = {
   match: PropTypes.shape({
     url: PropTypes.string
   }).isRequired,
-  mutate: PropTypes.func
-};
-
-Expense.defaultProps = {
-  mutate: () => {}
+  mutate: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func
+  }).isRequired
 };
 
 export default compose(

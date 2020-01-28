@@ -36,43 +36,29 @@ export const getDate = (
   return JSON.stringify(date).slice(1, 11);
 };
 
-export const getQueryYearAndMonth = (year = getDateYear(), month) => {
-  const monthIndex =
-    monthsOfYear[month] === undefined ? getDateMonth() : monthsOfYear[month];
+export const getQueryYearAndMonth = (year, month) => {
   return {
-    year: Number(year),
-    month: Number(monthIndex)
+    year: year ? Number(year) : undefined,
+    month: monthsOfYear[month]
   };
 };
 
-/** ************ SAVINGS AND INCOME HELPERS ******************* */
-
-export const getSavingsAndIncomeYearAndMonth = (
-  year = getDateYear(),
-  month
-) => {
-  const monthIndex =
-    monthsOfYear[month] === undefined ? getDateMonth() : monthsOfYear[month];
+export const getYearAndMonth = () => {
   return {
-    year: Number(year),
-    month: Number(monthIndex)
+    year: getDateYear(),
+    month: getDateMonth()
   };
 };
 
-export const getMonthAndYear = () => {
-  const date = new Date();
-
-  if (date.getDate() < 24) {
-    date.setMonth(date.getMonth() - 1);
-  }
-
+export const getYearAndMonthText = () => {
   return {
-    year: date.getFullYear(),
-    month: date.getMonth()
+    year: getDateYear(),
+    month: Object.keys(monthsOfYear)[getDateMonth()]
   };
 };
 
-export const getPreviousMonthAndYear = () => {
+/** ***************** Savings and Income ************ */
+export const getSavingsIncomeMonthAndYear = () => {
   const date = new Date();
 
   if (date.getDate() < 24) {

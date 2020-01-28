@@ -16,7 +16,7 @@ import {
   StyledButton,
   StyledHeading
 } from '../../styles';
-import { monthsOfYear, getDate, getMonthAndYear } from '../../utils/date';
+import { monthsOfYear, getDate } from '../../utils/date';
 import { setDecimalNumber } from '../../utils/money';
 import { ADD_INCOME, GET_INCOMES } from '../../graphql/incomes';
 import withIncomeQuery from '../../hoc/withIncomeQuery';
@@ -93,7 +93,7 @@ class Income extends Component {
     } = this.state;
 
     const incomeDate = new Date(date);
-    const { mutate } = this.props;
+    const { mutate, history } = this.props;
     mutate({
       variables: {
         amount: setDecimalNumber(amount),
@@ -107,7 +107,7 @@ class Income extends Component {
           query: GET_INCOMES
         }
       ]
-    });
+    }).then(() => history.push('/incomes'));
   };
 
   render() {
@@ -163,15 +163,14 @@ Income.propTypes = {
     url: PropTypes.string
   }).isRequired,
   incomes: PropTypes.instanceOf(Array).isRequired,
-  mutate: PropTypes.func
-};
-
-Income.defaultProps = {
-  mutate: () => {}
+  mutate: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func
+  }).isRequired
 };
 
 export default compose(
   withRouter,
   graphql(ADD_INCOME),
-  withIncomeQuery(getMonthAndYear())
+  withIncomeQuery
 )(Income);
