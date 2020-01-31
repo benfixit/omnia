@@ -16,15 +16,15 @@ const StackComponent = props => {
   );
 };
 
-const Stack = memo(StackComponent);
-
-Stack.propTypes = {
+StackComponent.propTypes = {
   children: PropTypes.func.isRequired,
   value: PropTypes.number
 };
 
-Stack.defaultProps = {
+StackComponent.defaultProps = {
   value: 0
 };
+
+const Stack = memo(StackComponent);
 
 export default Stack;

@@ -20,11 +20,11 @@ Dialog.Header = ModalHeader;
 Dialog.Content = ModalContent;
 Dialog.Action = DialogAction;
 
-DialogAction.propTypes = {
+Dialog.propTypes = {
   children: PropTypes.node
 };
 
-DialogAction.defaultProps = {
+Dialog.defaultProps = {
   children: null
 };
 

@@ -20,17 +20,17 @@ const StyledPane = styled(Pane)`
 export const withStack = () => {
   return (
     <Stack>
-      {zIndex => (
+      {zIndexFirst => (
         <>
-          <StyledPane>zIndex = {zIndex}</StyledPane>
+          <StyledPane>{`zIndex = ${zIndexFirst}`}</StyledPane>
           <Stack>
-            {zIndex => (
+            {zIndexSecond => (
               <>
-                <StyledPane>zIndex = {zIndex}</StyledPane>
+                <StyledPane>{`zIndex = ${zIndexSecond}`}</StyledPane>
                 <Stack>
-                  {zIndex => (
+                  {zIndexThird => (
                     <>
-                      <StyledPane>zIndex = {zIndex}</StyledPane>
+                      <StyledPane>{`zIndex = ${zIndexThird}`}</StyledPane>
                     </>
                   )}
                 </Stack>
