@@ -28,7 +28,7 @@ Text.defaultProps = {
 };
 
 Text.propTypes = {
-  as: PropTypes.oneOfType(supportedElements)
+  as: PropTypes.oneOf(supportedElements)
 };
 
 export default Text;

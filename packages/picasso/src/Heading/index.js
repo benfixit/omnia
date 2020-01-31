@@ -18,7 +18,7 @@ const Heading = styled(Text)`
 `;
 
 Heading.propTypes = {
-  as: PropTypes.oneOfType(supportedHeadings)
+  as: PropTypes.oneOf(supportedHeadings)
 };
 
 Heading.defaultProps = {

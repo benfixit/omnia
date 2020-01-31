@@ -6,19 +6,17 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import themeGet from '../theme/utils';
 
-const linkVariant = {
+const linkVariant = variant({
+  scale: 'links',
   variants: {
     primary: {
       color: 'primary'
     },
     danger: {
-      color: 'danger',
-      '&:hover': {
-        color: 'hoveredDanger'
-      }
+      color: 'danger'
     }
   }
-};
+});
 
 const baseStyles = css`
   text-decoration: none;
@@ -32,12 +30,12 @@ const baseStyles = css`
 
 const StyledLink = styled.a`
   ${baseStyles};
-  ${variant(linkVariant)};
+  ${linkVariant};
 `;
 
 const StyledRouterLink = styled(RouterLink)`
   ${baseStyles};
-  ${variant(linkVariant)};
+  ${linkVariant};
 `;
 
 const Link = props => {
@@ -60,7 +58,7 @@ Link.propTypes = {
   children: PropTypes.node,
   external: PropTypes.bool,
   href: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['primary', 'danger'])
+  variant: PropTypes.oneOf(['primary', 'danger', 'success'])
 };
 
 Link.defaultProps = {

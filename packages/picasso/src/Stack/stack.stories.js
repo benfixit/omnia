@@ -22,15 +22,15 @@ export const withStack = () => {
     <Stack>
       {zIndex => (
         <>
-          <StyledPane>zIndex ={zIndex}</StyledPane>
+          <StyledPane>zIndex = {zIndex}</StyledPane>
           <Stack>
             {zIndex => (
               <>
-                <StyledPane>zIndex ={zIndex}</StyledPane>
+                <StyledPane>zIndex = {zIndex}</StyledPane>
                 <Stack>
                   {zIndex => (
                     <>
-                      <StyledPane>zIndex ={zIndex}</StyledPane>
+                      <StyledPane>zIndex = {zIndex}</StyledPane>
                     </>
                   )}
                 </Stack>

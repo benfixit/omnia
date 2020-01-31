@@ -19,7 +19,7 @@ const StackComponent = props => {
 const Stack = memo(StackComponent);
 
 Stack.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.func.isRequired,
   value: PropTypes.number
 };
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 import { zIndex } from 'styled-system';
@@ -9,8 +8,7 @@ import ModalContent from './ModalContent';
 import ModalAction from './ModalAction';
 import Stack from '../Stack';
 import themeGet from '../theme/utils';
-
-const modalRoot = document.getElementById('docs-root');
+import Portal from '../Portal';
 
 const containerLanding = keyframes`
   from {
@@ -50,36 +48,20 @@ const Container = styled.div`
   animation: ${containerLanding} 0.5s;
 `;
 
-class Modal extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.wrapper = document.createElement('div');
-  }
-
-  componentDidMount() {
-    modalRoot.appendChild(this.wrapper);
-  }
-
-  componentWillUnmount() {
-    modalRoot.removeChild(this.wrapper);
-  }
-
-  render() {
-    const { children, show } = this.props;
-    const { wrapper } = this;
-    return ReactDOM.createPortal(
+const Modal = props => {
+  const { children, show, ...rest } = props;
+  return (
+    <Portal>
       <Stack>
         {zIndexValue => (
           <BackDrop zIndex={zIndexValue} show={show}>
-            <Container>{children}</Container>
+            <Container {...rest}>{children}</Container>
           </BackDrop>
         )}
-      </Stack>,
-      wrapper
-    );
-  }
-}
+      </Stack>
+    </Portal>
+  );
+};
 
 Modal.propTypes = {
   children: PropTypes.node.isRequired,

@@ -15,3 +15,12 @@ export const withEmoji = () => (
     </span>
   </Button>
 );
+
+export const withVariant = () => (
+  <>
+    <Button>Primary Button</Button>
+    <Button variant="success">Success Button</Button>
+    <Button variant="secondary">Secondary Button</Button>
+    <Button variant="danger">Danger Button</Button>
+  </>
+);
