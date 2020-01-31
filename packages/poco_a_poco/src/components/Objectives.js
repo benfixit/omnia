@@ -3,13 +3,14 @@ import { Query } from 'react-apollo';
 import { v4 } from 'uuid';
 import styled from 'styled-components';
 import Picasso from '@omnia/picasso';
+
 import { GET_OBJECTIVES } from '../graphql/objectives';
+import Layout from './Layout';
 
 const { Flex, Heading, Loading, Pane, Text } = Picasso;
 
-const Container = styled(Pane)``;
-
 const Wrapper = styled(Pane)`
+  border: thin solid red;
   flex-direction: column;
   width: 60%;
   margin: 0 auto;
@@ -28,12 +29,13 @@ const StyledItem = styled(Flex)`
 `;
 
 const StyledHeading = styled(Heading)`
-  font-size: 24px;
+  font-size: 22px;
+  margin-bottom: 40px;
 `;
 
 const Objectives = () => {
   return (
-    <Container>
+    <Layout>
       <Wrapper>
         <StyledHeading>My Objectives</StyledHeading>
         <Query query={GET_OBJECTIVES}>
@@ -54,7 +56,7 @@ const Objectives = () => {
           }}
         </Query>
       </Wrapper>
-    </Container>
+    </Layout>
   );
 };
 
