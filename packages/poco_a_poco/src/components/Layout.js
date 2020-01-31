@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import Picasso from '@omnia/picasso';
 
@@ -38,6 +39,10 @@ const Layout = props => {
       {children}
     </Container>
   );
+};
+
+Layout.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 export default Layout;

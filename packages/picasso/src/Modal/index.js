@@ -2,10 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
+import { zIndex } from 'styled-system';
 
 import ModalHeader from './ModalHeader';
 import ModalContent from './ModalContent';
 import ModalAction from './ModalAction';
+import Stack from '../Stack';
 import themeGet from '../theme/utils';
 
 const modalRoot = document.getElementById('docs-root');
@@ -31,7 +33,7 @@ const BackDrop = styled.div`
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 900;
+  ${zIndex};
 `;
 
 const Container = styled.div`
@@ -67,9 +69,13 @@ class Modal extends React.Component {
     const { children, show } = this.props;
     const { wrapper } = this;
     return ReactDOM.createPortal(
-      <BackDrop show={show}>
-        <Container>{children}</Container>
-      </BackDrop>,
+      <Stack>
+        {zIndexValue => (
+          <BackDrop zIndex={zIndexValue} show={show}>
+            <Container>{children}</Container>
+          </BackDrop>
+        )}
+      </Stack>,
       wrapper
     );
   }

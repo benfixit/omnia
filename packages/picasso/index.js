@@ -11,6 +11,7 @@ import Loading from './src/Loading';
 import Modal from './src/Modal';
 import Pane from './src/Pane';
 import Select, { SelectField, SelectWithValue } from './src/Select';
+import Stack from './src/Stack';
 import Text from './src/Text';
 import TextArea, { TextAreaField, TextAreaWithValue } from './src/TextArea';
 import theme from './src/theme';
@@ -37,6 +38,7 @@ const Picasso = {
   Select,
   SelectField,
   SelectWithValue,
+  Stack,
   Text,
   TextArea,
   TextAreaField,

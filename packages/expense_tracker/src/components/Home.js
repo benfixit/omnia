@@ -134,7 +134,11 @@ const Home = props => {
             </tr>
             <tr>
               <Th>Bank Balance</Th>
-              <Td>{formatter.format(incomesTotal - actualExpensesTotal)}</Td>
+              <Td>
+                {formatter.format(
+                  incomesTotal - actualExpensesTotal - actualSavingsTotal
+                )}
+              </Td>
             </tr>
             <tr>
               <Th>Savings Balance</Th>
