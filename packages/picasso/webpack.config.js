@@ -23,7 +23,7 @@ module.exports = {
     ]
   },
   externals: {
-    // Don't bundle react or react-dom
+    // Don't bundle styled-components, react or react-dom
     'styled-components': {
       commonjs: 'styled-components',
       commonjs2: 'styled-components',
@@ -40,6 +40,12 @@ module.exports = {
       commonjs2: 'react-dom',
       amd: 'ReactDOM',
       root: 'ReactDOM'
+    },
+    'react-router-dom': {
+      commonjs: 'react-router-dom',
+      commonjs2: 'react-router-dom',
+      amd: 'ReactRouterDOM',
+      root: 'ReactRouterDOM'
     }
   }
 };
