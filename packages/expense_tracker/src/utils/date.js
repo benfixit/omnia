@@ -24,6 +24,10 @@ export const getDateMonth = () => {
   return date.getDate() < 24 ? date.getMonth() : date.getMonth() + 1;
 };
 
+export const getMonthName = () => {
+  return Object.keys(monthsOfYear)[getDateMonth()];
+};
+
 export const getDate = (
   year = getDateYear(),
   month = getDateMonth(),
@@ -53,17 +57,28 @@ export const getYearAndMonth = () => {
 export const getYearAndMonthText = () => {
   return {
     year: getDateYear(),
-    month: Object.keys(monthsOfYear)[getDateMonth()]
+    month: getMonthName()
   };
 };
 
 /** ***************** Savings and Income ************ */
+export const getSavingsIncomeDateMonth = () => {
+  const date = new Date();
+  return date.getDate() < 24 ? date.getMonth() - 1 : date.getMonth();
+};
+
+export const getSavingsIncomeMonthName = () => {
+  return Object.keys(monthsOfYear)[getSavingsIncomeDateMonth()];
+};
+
 export const getSavingsIncomeMonthAndYear = () => {
   const date = new Date();
 
-  if (date.getDate() < 24) {
-    date.setMonth(date.getMonth() - 1);
-  }
+  date.setMonth(getSavingsIncomeDateMonth());
+
+  // if (date.getDate() < 24) {
+  //   date.setMonth(date.getMonth() - 1);
+  // }
 
   return {
     year: date.getFullYear(),

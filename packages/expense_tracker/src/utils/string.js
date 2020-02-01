@@ -1,0 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+export const toCapitalize = str => {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};

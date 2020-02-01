@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -8,7 +9,13 @@ import Picasso from '@omnia/picasso';
 import Layout from './Layout';
 import { Table } from '../styles';
 import { formatter, getDecimalNumber } from '../utils/money';
-import { getYearAndMonth, getSavingsIncomeMonthAndYear } from '../utils/date';
+import {
+  getYearAndMonth,
+  getSavingsIncomeMonthAndYear,
+  getMonthName,
+  getSavingsIncomeMonthName
+} from '../utils/date';
+import { toCapitalize } from '../utils/string';
 import { INITIAL_MONEY_SAVED } from '../utils/constants';
 import withExpenseQuery from '../hoc/withExpenseQuery';
 import withIncomeQuery from '../hoc/withIncomeQuery';
@@ -45,6 +52,11 @@ const Home = props => {
   const { expenses, incomes, savings } = props;
   const expensePeriod = getYearAndMonth();
   const savingsIncomePeriod = getSavingsIncomeMonthAndYear();
+  const monthName = compose(toCapitalize, getMonthName)();
+  const savingsIncomeMonthName = compose(
+    toCapitalize,
+    getSavingsIncomeMonthName
+  )();
 
   const incomesTotal = incomes.reduce(
     (acc, item) => acc + getDecimalNumber(item.amount),
@@ -83,12 +95,12 @@ const Home = props => {
 
   return (
     <Layout>
-      <StyledHeading>Summary (February) - Estimated</StyledHeading>
+      <StyledHeading>Summary ({monthName}) - Estimated</StyledHeading>
       <TableContainer>
         <Table.Table>
           <tbody>
             <tr>
-              <Th>Income (January)</Th>
+              <Th>Income ({savingsIncomeMonthName})</Th>
               <Td>{formatter.format(incomesTotal)}</Td>
             </tr>
             <tr>
@@ -96,7 +108,7 @@ const Home = props => {
               <Td>{formatter.format(budgetedExpensesTotal)}</Td>
             </tr>
             <tr>
-              <Th>Savings (January)</Th>
+              <Th>Savings ({savingsIncomeMonthName})</Th>
               <Td>{formatter.format(estimatedSavingsTotal)}</Td>
             </tr>
             <tr>
@@ -116,20 +128,20 @@ const Home = props => {
           </tbody>
         </Table.Table>
       </TableContainer>
-      <StyledHeading>Summary (February) - Actual</StyledHeading>
+      <StyledHeading>Summary ({monthName}) - Actual</StyledHeading>
       <TableContainer>
         <Table.Table>
           <tbody>
             <tr>
-              <Th>Income</Th>
+              <Th>Income ({savingsIncomeMonthName})</Th>
               <Td>{formatter.format(incomesTotal)}</Td>
             </tr>
             <tr>
-              <Th>Budget (Actual Expenses)</Th>
+              <Th>Actual Expenses</Th>
               <Td>{formatter.format(actualExpensesTotal)}</Td>
             </tr>
             <tr>
-              <Th>Budget (Actual Savings)</Th>
+              <Th>Actual Savings ({savingsIncomeMonthName})</Th>
               <Td>{formatter.format(actualSavingsTotal)}</Td>
             </tr>
             <tr>
