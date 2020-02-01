@@ -105,3 +105,21 @@ export const EDIT_EXPENSE = gql`
     }
   }
 `;
+
+export const DELETE_EXPENSE = gql`
+  mutation DropExpense($_id: ID!) {
+    deleteExpense(_id: $_id) {
+      _id
+      budget
+      actual
+      description
+      year
+      month
+      day
+      category {
+        _id
+        title
+      }
+    }
+  }
+`;
