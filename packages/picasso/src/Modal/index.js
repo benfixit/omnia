@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 import { zIndex } from 'styled-system';
@@ -48,28 +48,51 @@ const Container = styled.div`
   animation: ${containerLanding} 0.5s;
 `;
 
-const Modal = props => {
-  const { children, show, ...rest } = props;
-  return (
-    <Portal>
-      <Stack>
-        {zIndexValue => (
-          <BackDrop zIndex={zIndexValue} show={show}>
-            <Container {...rest}>{children}</Container>
-          </BackDrop>
-        )}
-      </Stack>
-    </Portal>
-  );
-};
+class Modal extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.backdropRef = createRef();
+  }
+
+  handleBackdropClick = event => {
+    const { onClose } = this.props;
+    if (event.target === this.backdropRef.current && onClose) {
+      onClose();
+    }
+  };
+
+  render() {
+    const { children, show, ...rest } = this.props;
+    const { backdropRef, handleBackdropClick } = this;
+    return (
+      <Portal>
+        <Stack>
+          {zIndexValue => (
+            <BackDrop
+              ref={backdropRef}
+              zIndex={zIndexValue}
+              show={show}
+              onClick={handleBackdropClick}
+            >
+              <Container {...rest}>{children}</Container>
+            </BackDrop>
+          )}
+        </Stack>
+      </Portal>
+    );
+  }
+}
 
 Modal.propTypes = {
   children: PropTypes.node.isRequired,
-  show: PropTypes.bool
+  show: PropTypes.bool,
+  onClose: PropTypes.func
 };
 
 Modal.defaultProps = {
-  show: false
+  show: false,
+  onClose: () => {}
 };
 
 Modal.Header = ModalHeader;
