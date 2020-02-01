@@ -5,7 +5,8 @@ export const formatter = new Intl.NumberFormat('en-US', {
 });
 
 export const setDecimalNumber = amount => {
-  return Number(amount) * 100;
+  const fixedNumber = Number(amount) * 100;
+  return Number(fixedNumber.toFixed());
 };
 
 export const getDecimalNumber = amount => {
