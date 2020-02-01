@@ -11,11 +11,7 @@ import Picasso from '@omnia/picasso';
 import SavingModal from './SavingsModal';
 import SavingsTable from './SavingsTable';
 import Layout from '../Layout';
-import {
-  Layout as LayoutStyle,
-  StyledButton,
-  StyledHeading
-} from '../../styles';
+import { Layout as LayoutStyle, StyledHeading } from '../../styles';
 import { monthsOfYear, getDate } from '../../utils/date';
 import { setDecimalNumber } from '../../utils/money';
 import { ADD_SAVING, GET_SAVINGS } from '../../graphql/savings';
@@ -60,22 +56,9 @@ class Savings extends Component {
         actual: '0',
         description: '',
         date: getDate()
-      },
-      showModal: false
+      }
     };
   }
-
-  handleOpenModal = () => {
-    this.setState({
-      showModal: true
-    });
-  };
-
-  handleCloseModal = () => {
-    this.setState({
-      showModal: false
-    });
-  };
 
   handleChange = event => {
     const { data } = this.state;
@@ -87,7 +70,7 @@ class Savings extends Component {
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event, toggle) => {
     event.preventDefault();
     const {
       data: { date, description, amount, actual }
@@ -109,17 +92,15 @@ class Savings extends Component {
           query: GET_SAVINGS
         }
       ]
-    }).then(() => history.push('/savings'));
+    }).then(() => {
+      toggle();
+      history.push('/savings');
+    });
   };
 
   render() {
-    const { data, showModal } = this.state;
-    const {
-      handleChange,
-      handleSubmit,
-      handleOpenModal,
-      handleCloseModal
-    } = this;
+    const { data } = this.state;
+    const { handleChange, handleSubmit } = this;
     const {
       match: { url },
       savings
@@ -145,16 +126,13 @@ class Savings extends Component {
         </LowerNavRow>
         <SavingsRow>
           <StyledHeading>Savings</StyledHeading>
-          <StyledButton onClick={handleOpenModal}>Add Savings</StyledButton>
+          <SavingModal
+            data={data}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+          />
         </SavingsRow>
         <SavingsTable savings={savings} />
-        <SavingModal
-          showModal={showModal}
-          data={data}
-          handleChange={handleChange}
-          handleCloseModal={handleCloseModal}
-          handleSubmit={handleSubmit}
-        />
       </Layout>
     );
   }

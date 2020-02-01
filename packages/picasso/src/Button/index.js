@@ -48,16 +48,22 @@ const StyledButton = styled.button`
 `;
 
 const Button = props => {
-  const { children, ...rest } = props;
-  return <StyledButton {...rest}>{children}</StyledButton>;
+  const { children, onClick, ...rest } = props;
+  return (
+    <StyledButton onClick={onClick} {...rest}>
+      {children}
+    </StyledButton>
+  );
 };
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,
+  onClick: PropTypes.func,
   variant: PropTypes.oneOf(['primary', 'danger', 'success', 'secondary'])
 };
 
 Button.defaultProps = {
+  onClick: () => {},
   variant: 'primary'
 };
 

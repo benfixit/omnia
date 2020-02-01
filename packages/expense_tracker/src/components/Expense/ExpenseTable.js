@@ -11,7 +11,15 @@ import { Table } from '../../styles';
 import { formatter, getDecimalNumber } from '../../utils/money';
 import { DELETE_EXPENSE, GET_EXPENSES } from '../../graphql/expenses';
 
-const { Dialog, Label, Link, Pane, Text } = Picasso;
+const { Button, Dialog, Heading, Label, Link, Pane, Text } = Picasso;
+
+const ActionPane = styled(Pane)`
+  width: 100%;
+  justify-content: space-around;
+  button {
+    width: 150px;
+  }
+`;
 
 const TableContainer = styled(Pane)`
   justify-content: center;
@@ -48,20 +56,16 @@ class ExpenseTable extends React.Component {
     };
   }
 
-  handleOpenDeleteDialog = expenseId => {
+  handleToggleDeleteDialog = (expenseId = null) => {
+    const { showDialog } = this.state;
     this.setState({
-      showDialog: true,
+      showDialog: !showDialog,
       targetExpense: expenseId
     });
   };
 
-  handleCloseDeleteDialog = () => {
-    this.setState({
-      showDialog: false
-    });
-  };
-
   deleteExpense = () => {
+    const { handleToggleDeleteDialog } = this;
     const { targetExpense } = this.state;
     const { mutate, history } = this.props;
     mutate({
@@ -73,17 +77,16 @@ class ExpenseTable extends React.Component {
           query: GET_EXPENSES
         }
       ]
-    }).then(() => history.push('/expenses'));
+    }).then(() => {
+      handleToggleDeleteDialog();
+      history.push('/expenses');
+    });
   };
 
   render() {
     const { expenses } = this.props;
     const { showDialog } = this.state;
-    const {
-      handleOpenDeleteDialog,
-      handleCloseDeleteDialog,
-      deleteExpense
-    } = this;
+    const { handleToggleDeleteDialog, deleteExpense } = this;
 
     const actualExpensesTotal = expenses.reduce(
       (acc, item) => acc + getDecimalNumber(item.actual),
@@ -132,7 +135,7 @@ class ExpenseTable extends React.Component {
                     <Link href={`/expenses/edit/${expenseId}`}>Edit</Link>
                     <DeleteLabel
                       variant="danger"
-                      onClick={() => handleOpenDeleteDialog(expenseId)}
+                      onClick={() => handleToggleDeleteDialog(expenseId)}
                     >
                       Delete
                     </DeleteLabel>
@@ -158,16 +161,33 @@ class ExpenseTable extends React.Component {
             </tr>
           </tfoot>
         </Table.Table>
-        <Dialog show={showDialog}>
-          <Dialog.Header title="Delete Expense" />
-          <Dialog.Content>
-            <Text>Are you sure you want to delete this expense?</Text>
-          </Dialog.Content>
-          <Dialog.Action
-            onCancel={handleCloseDeleteDialog}
-            onOk={deleteExpense}
-          />
-        </Dialog>
+        <Dialog
+          show={showDialog}
+          onClose={handleToggleDeleteDialog}
+          render={() => {
+            return (
+              <>
+                <Dialog.Header>
+                  <Heading as="h2">Delete Expense</Heading>
+                </Dialog.Header>
+                <Dialog.Content>
+                  <Text>Are you sure you want to delete this expense?</Text>
+                </Dialog.Content>
+                <Dialog.Action>
+                  <ActionPane>
+                    <Button
+                      variant="secondary"
+                      onClick={handleToggleDeleteDialog}
+                    >
+                      Cancel
+                    </Button>
+                    <Button onClick={deleteExpense}>OK</Button>
+                  </ActionPane>
+                </Dialog.Action>
+              </>
+            );
+          }}
+        />
       </TableContainer>
     );
   }

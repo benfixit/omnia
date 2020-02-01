@@ -14,11 +14,7 @@ import withCategoryQuery from '../../hoc/withCategoryQuery';
 import withExpenseQuery from '../../hoc/withExpenseQuery';
 import { ADD_EXPENSE, GET_EXPENSES } from '../../graphql/expenses';
 import Layout from '../Layout';
-import {
-  Layout as LayoutStyle,
-  StyledButton,
-  StyledHeading
-} from '../../styles';
+import { Layout as LayoutStyle, StyledHeading } from '../../styles';
 import { setDecimalNumber } from '../../utils/money';
 import { monthsOfYear, getDate } from '../../utils/date';
 
@@ -62,22 +58,9 @@ class Expense extends Component {
         description: '',
         date: getDate(),
         category: ''
-      },
-      showModal: false
+      }
     };
   }
-
-  handleOpenModal = () => {
-    this.setState({
-      showModal: true
-    });
-  };
-
-  handleCloseModal = () => {
-    this.setState({
-      showModal: false
-    });
-  };
 
   handleChange = event => {
     const { expenseObject } = this.state;
@@ -89,7 +72,7 @@ class Expense extends Component {
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event, toggle) => {
     event.preventDefault();
     const {
       expenseObject: { date, budget, actual, description, category }
@@ -111,17 +94,15 @@ class Expense extends Component {
           query: GET_EXPENSES
         }
       ]
-    }).then(() => history.push('/expenses'));
+    }).then(() => {
+      toggle();
+      history.push('/expenses');
+    });
   };
 
   render() {
-    const { expenseObject, showModal } = this.state;
-    const {
-      handleChange,
-      handleSubmit,
-      handleOpenModal,
-      handleCloseModal
-    } = this;
+    const { expenseObject } = this.state;
+    const { handleChange, handleSubmit } = this;
     const {
       categories,
       expenses,
@@ -148,17 +129,14 @@ class Expense extends Component {
         </LowerNavRow>
         <ExpensesRow>
           <StyledHeading>Expenses</StyledHeading>
-          <StyledButton onClick={handleOpenModal}>Add Expense</StyledButton>
+          <ExpenseModal
+            expenseObject={expenseObject}
+            categories={categories}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+          />
         </ExpensesRow>
         <ExpenseTable expenses={expenses} />
-        <ExpenseModal
-          showModal={showModal}
-          expenseObject={expenseObject}
-          categories={categories}
-          handleChange={handleChange}
-          handleCloseModal={handleCloseModal}
-          handleSubmit={handleSubmit}
-        />
       </Layout>
     );
   }

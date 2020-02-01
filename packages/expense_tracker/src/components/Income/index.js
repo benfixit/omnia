@@ -11,11 +11,7 @@ import Picasso from '@omnia/picasso';
 import IncomeModal from './IncomeModal';
 import IncomeTable from './IncomeTable';
 import Layout from '../Layout';
-import {
-  Layout as LayoutStyle,
-  StyledButton,
-  StyledHeading
-} from '../../styles';
+import { Layout as LayoutStyle, StyledHeading } from '../../styles';
 import { monthsOfYear, getDate } from '../../utils/date';
 import { setDecimalNumber } from '../../utils/money';
 import { ADD_INCOME, GET_INCOMES } from '../../graphql/incomes';
@@ -59,22 +55,9 @@ class Income extends Component {
         amount: '0',
         description: '',
         date: getDate()
-      },
-      showModal: false
+      }
     };
   }
-
-  handleOpenModal = () => {
-    this.setState({
-      showModal: true
-    });
-  };
-
-  handleCloseModal = () => {
-    this.setState({
-      showModal: false
-    });
-  };
 
   handleChange = event => {
     const { incomeObject } = this.state;
@@ -86,7 +69,7 @@ class Income extends Component {
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event, toggle) => {
     event.preventDefault();
     const {
       incomeObject: { date, description, amount }
@@ -107,17 +90,15 @@ class Income extends Component {
           query: GET_INCOMES
         }
       ]
-    }).then(() => history.push('/incomes'));
+    }).then(() => {
+      toggle();
+      history.push('/incomes');
+    });
   };
 
   render() {
-    const { incomeObject, showModal } = this.state;
-    const {
-      handleChange,
-      handleSubmit,
-      handleOpenModal,
-      handleCloseModal
-    } = this;
+    const { incomeObject } = this.state;
+    const { handleChange, handleSubmit } = this;
     const {
       match: { url },
       incomes
@@ -143,16 +124,13 @@ class Income extends Component {
         </LowerNavRow>
         <IncomesRow>
           <StyledHeading>Income</StyledHeading>
-          <StyledButton onClick={handleOpenModal}>Add Income</StyledButton>
+          <IncomeModal
+            incomeObject={incomeObject}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+          />
         </IncomesRow>
         <IncomeTable incomes={incomes} />
-        <IncomeModal
-          showModal={showModal}
-          incomeObject={incomeObject}
-          handleChange={handleChange}
-          handleCloseModal={handleCloseModal}
-          handleSubmit={handleSubmit}
-        />
       </Layout>
     );
   }

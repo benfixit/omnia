@@ -1,31 +1,17 @@
-import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 import Modal from '../Modal';
 import ModalHeader from '../Modal/ModalHeader';
 import ModalContent from '../Modal/ModalContent';
-import DialogAction from './DialogAction';
+import ModalAction from '../Modal/ModalAction';
 
-const DialogContainer = styled(Modal)`
-  width: 500px;
+const Dialog = styled(Modal)`
+  width: 450px;
+  border-radius: 5px;
 `;
-
-const Dialog = props => {
-  const { children, ...rest } = props;
-  return <DialogContainer {...rest}>{children}</DialogContainer>;
-};
 
 Dialog.Header = ModalHeader;
 Dialog.Content = ModalContent;
-Dialog.Action = DialogAction;
-
-Dialog.propTypes = {
-  children: PropTypes.node
-};
-
-Dialog.defaultProps = {
-  children: null
-};
+Dialog.Action = ModalAction;
 
 export default Dialog;

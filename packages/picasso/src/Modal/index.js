@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React, { createContext, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 import { zIndex } from 'styled-system';
@@ -9,6 +9,7 @@ import ModalAction from './ModalAction';
 import Stack from '../Stack';
 import themeGet from '../theme/utils';
 import Portal from '../Portal';
+import { isAssigned } from '../utils';
 
 const containerLanding = keyframes`
   from {
@@ -38,7 +39,9 @@ const Container = styled.div`
   position: relative;
   margin: 0 auto;
   width: 80%;
-  padding: 40px;
+  max-height: 60%;
+  overflow: auto;
+  padding: ${themeGet('space.5')};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,50 +51,102 @@ const Container = styled.div`
   animation: ${containerLanding} 0.5s;
 `;
 
+const ModalContext = createContext({});
+
 class Modal extends React.Component {
   constructor(props) {
     super(props);
 
-    this.backdropRef = createRef();
+    this.backgroundRef = createRef();
+
+    const { show } = this.props;
+
+    this.isControlled = isAssigned(show);
+
+    this.state = {
+      isOpen: false
+    };
   }
 
-  handleBackdropClick = event => {
-    const { onClose } = this.props;
-    if (event.target === this.backdropRef.current && onClose) {
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleEscapeKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleEscapeKeyDown);
+  }
+
+  handleEscapeKeyDown = event => {
+    const { toggle } = this;
+    if (event.key === 'Escape') {
+      toggle();
+    }
+  };
+
+  handleBackgroundClick = event => {
+    const { toggle, backgroundRef } = this;
+    if (event.target === backgroundRef.current) {
+      toggle();
+    }
+  };
+
+  toggle = () => {
+    const { isControlled } = this;
+    if (isControlled) {
+      const { onClose } = this.props;
       onClose();
+    } else {
+      const { isOpen } = this.state;
+      this.setState({
+        isOpen: !isOpen
+      });
     }
   };
 
   render() {
-    const { children, show, ...rest } = this.props;
-    const { backdropRef, handleBackdropClick } = this;
+    let { isOpen } = this.state;
+    const { children, render, show, ...rest } = this.props;
+    const { toggle, backgroundRef, handleBackgroundClick, isControlled } = this;
+
+    if (isControlled) {
+      isOpen = show;
+    }
+
     return (
-      <Portal>
-        <Stack>
-          {zIndexValue => (
-            <BackDrop
-              ref={backdropRef}
-              zIndex={zIndexValue}
-              show={show}
-              onClick={handleBackdropClick}
-            >
-              <Container {...rest}>{children}</Container>
-            </BackDrop>
-          )}
-        </Stack>
-      </Portal>
+      <ModalContext.Provider value={{ toggle, isOpen }}>
+        <Portal>
+          <Stack>
+            {zIndexValue => (
+              <BackDrop
+                zIndex={zIndexValue}
+                show={isOpen}
+                ref={backgroundRef}
+                onClick={handleBackgroundClick}
+              >
+                <Container onClick={event => event.stopPropagation()} {...rest}>
+                  {render({ toggle })}
+                </Container>
+              </BackDrop>
+            )}
+          </Stack>
+        </Portal>
+        {typeof children === 'function' && children({ toggle })}
+      </ModalContext.Provider>
     );
   }
 }
 
 Modal.propTypes = {
-  children: PropTypes.node.isRequired,
-  show: PropTypes.bool,
+  children: PropTypes.func,
+  render: PropTypes.func,
+  show: PropTypes.oneOfType([PropTypes.bool, PropTypes.shape({})]),
   onClose: PropTypes.func
 };
 
 Modal.defaultProps = {
-  show: false,
+  children: () => {},
+  render: () => {},
+  show: null,
   onClose: () => {}
 };
 
