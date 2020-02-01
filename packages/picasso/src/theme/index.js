@@ -33,7 +33,9 @@ const colors = {
   lightBlue: '#5bc0de',
   black: '#000000',
   textDefault: '#222222',
-  textLabel: '#666666'
+  textLabel: '#666666',
+  warning: '#ff9800',
+  info: '#2196F3'
 };
 
 const theme = {

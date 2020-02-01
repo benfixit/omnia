@@ -13,7 +13,7 @@ export const BasicDialog = () => {
   const [show, setShow] = useState(false);
   return (
     <>
-      <Dialog show={show} title="Test Dialog">
+      <Dialog show={show}>
         <Dialog.Header title="Test Dialog" />
         <Dialog.Content>
           <Text>
