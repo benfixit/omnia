@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Picasso from '@omnia/picasso';
 import { Layout as LayoutStyle } from '../styles';
 import { getYearAndMonthText } from '../utils/date';
 
-const { Heading } = Picasso;
+const { Heading, Link } = Picasso;
 
 const NavRow = styled(LayoutStyle.Row)`
   justify-content: space-between;
@@ -41,17 +40,17 @@ const Layout = props => {
     <LayoutStyle.Container>
       <NavRow>
         <NavH1>
-          <NavLink to="/">Budget Tracker</NavLink>
+          <NavLink href="/">Budget Tracker</NavLink>
         </NavH1>
         <NavUl>
-          <NavLink to="/">Home</NavLink>
-          <NavLink to={`/expenses/${period.year}/${period.month}`}>
+          <NavLink href="/">Home</NavLink>
+          <NavLink href={`/expenses/${period.year}/${period.month}`}>
             Expenses
           </NavLink>
-          <NavLink to={`/incomes/${period.year}/${period.month}`}>
+          <NavLink href={`/incomes/${period.year}/${period.month}`}>
             Incomes
           </NavLink>
-          <NavLink to={`/savings/${period.year}/${period.month}`}>
+          <NavLink href={`/savings/${period.year}/${period.month}`}>
             Savings
           </NavLink>
         </NavUl>

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { graphql } from 'react-apollo';
 import { v4 } from 'uuid';
-import { Link } from 'react-router-dom';
 import compose from 'lodash/fp/compose';
 import Picasso from '@omnia/picasso';
 
@@ -23,7 +22,7 @@ import {
 import { setDecimalNumber } from '../../utils/money';
 import { monthsOfYear, getDate } from '../../utils/date';
 
-const { Pane } = Picasso;
+const { Link, Pane } = Picasso;
 
 const ExpensesRow = styled(Pane)`
   justify-content: space-between;
@@ -139,7 +138,7 @@ class Expense extends Component {
               return (
                 <LowerNavLink
                   key={v4()}
-                  to={`/${root}/${paramDate.getFullYear()}/${month.toLowerCase()}`}
+                  href={`/${root}/${paramDate.getFullYear()}/${month.toLowerCase()}`}
                 >
                   {month}
                 </LowerNavLink>

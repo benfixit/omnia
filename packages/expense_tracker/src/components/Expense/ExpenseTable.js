@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { v4 } from 'uuid';
 import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { graphql } from 'react-apollo';
 import compose from 'lodash/fp/compose';
 import Picasso from '@omnia/picasso';
@@ -11,7 +11,7 @@ import { Table } from '../../styles';
 import { formatter, getDecimalNumber } from '../../utils/money';
 import { DELETE_EXPENSE, GET_EXPENSES } from '../../graphql/expenses';
 
-const { Dialog, Label, Pane, Text } = Picasso;
+const { Dialog, Label, Link, Pane, Text } = Picasso;
 
 const TableContainer = styled(Pane)`
   justify-content: center;
@@ -129,9 +129,7 @@ class ExpenseTable extends React.Component {
                   </Table.Td>
                   <Table.Td>{expense.category.title}</Table.Td>
                   <ActionTableColumn>
-                    <Link to={`/expenses/edit/${expenseId}`}>Edit</Link>
-                    {/*  <Label variant="success">Edit</Label> */}
-                    {/* </Link> */}
+                    <Link href={`/expenses/edit/${expenseId}`}>Edit</Link>
                     <DeleteLabel
                       variant="danger"
                       onClick={() => handleOpenDeleteDialog(expenseId)}
