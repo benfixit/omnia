@@ -57,7 +57,7 @@ export const BasicAlertWithVariant = () => {
         <BooleanValue defaultValue={false}>
           {({ value, set }) => (
             <>
-              <Alert show={value} onOk={() => set(false)} type="secondary">
+              <Alert show={value} onOk={() => set(false)} variant="secondary">
                 <p>Secondary Alert</p>
               </Alert>
               <StyledButton onClick={() => set(true)} variant="secondary">
@@ -71,7 +71,7 @@ export const BasicAlertWithVariant = () => {
         <BooleanValue defaultValue={false}>
           {({ value, set }) => (
             <>
-              <Alert show={value} onOk={() => set(false)} type="danger">
+              <Alert show={value} onOk={() => set(false)} variant="danger">
                 <p>Danger Alert</p>
               </Alert>
               <StyledButton onClick={() => set(true)} variant="danger">
@@ -85,7 +85,7 @@ export const BasicAlertWithVariant = () => {
         <BooleanValue defaultValue={false}>
           {({ value, set }) => (
             <>
-              <Alert show={value} onOk={() => set(false)} type="success">
+              <Alert show={value} onOk={() => set(false)} variant="success">
                 <p>Success Alert</p>
               </Alert>
               <StyledButton onClick={() => set(true)} variant="success">

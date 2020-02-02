@@ -30,6 +30,7 @@ const colors = {
   danger: '#d9534f',
   hoveredDanger: '#b7312d',
   white: '#ffffff',
+  offWhite: '#fcfcfc',
   lightBlue: '#5bc0de',
   black: '#000000',
   textDefault: '#222222',

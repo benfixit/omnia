@@ -1,13 +1,30 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { zIndex } from 'styled-system';
+import { zIndex, variant as styledVariant } from 'styled-system';
 
 import Portal from '../Portal';
 import Pane from '../Pane';
 import Stack from '../Stack';
 import Button from '../Button';
 import themeGet from '../theme/utils';
+
+const alertVariants = {
+  variants: {
+    primary: {
+      borderLeft: 'thick solid #3498db'
+    },
+    success: {
+      borderLeft: 'thick solid #5cb85c'
+    },
+    danger: {
+      borderLeft: 'thick solid #d9534f'
+    },
+    secondary: {
+      borderLeft: 'thick solid #eeeeee'
+    }
+  }
+};
 
 const Container = styled(Pane)`
   display: ${props => (props.show ? 'flex' : 'none')};
@@ -16,13 +33,12 @@ const Container = styled(Pane)`
   left: 50%;
   transform: translateX(-50%);
   width: 400px;
-  border: thin solid ${themeGet('colors.gray')};
   border-radius: 3px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.4);
   flex-direction: column;
   padding: ${themeGet('space.4')};
-  background-color: ${themeGet('colors.white')};
+  background-color: ${themeGet('colors.offWhite')};
   ${zIndex};
+  ${styledVariant(alertVariants)};
 `;
 
 const AlertButtonWrapper = styled(Pane)`
@@ -31,15 +47,20 @@ const AlertButtonWrapper = styled(Pane)`
 `;
 
 const Alert = props => {
-  const { children, show, type, onOk } = props;
+  const { children, show, variant, onOk, ...rest } = props;
   return (
     <Portal>
       <Stack>
         {zIndexValue => (
-          <Container zIndex={zIndexValue} show={show}>
+          <Container
+            zIndex={zIndexValue}
+            show={show}
+            variant={variant}
+            {...rest}
+          >
             {children}
             <AlertButtonWrapper>
-              <Button variant={type} onClick={onOk}>
+              <Button variant={variant} onClick={onOk}>
                 OK
               </Button>
             </AlertButtonWrapper>
@@ -51,14 +72,14 @@ const Alert = props => {
 };
 
 Alert.propTypes = {
-  type: PropTypes.oneOf(['primary', 'success', 'danger', 'secondary']),
+  variant: PropTypes.oneOf(['primary', 'success', 'danger', 'secondary']),
   children: PropTypes.node,
   show: PropTypes.bool,
   onOk: PropTypes.func
 };
 
 Alert.defaultProps = {
-  type: 'primary',
+  variant: 'primary',
   children: null,
   show: false,
   onOk: () => {}
