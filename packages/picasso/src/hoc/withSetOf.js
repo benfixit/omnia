@@ -3,8 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import { SetValue } from 'react-values';
-
-import getDisplayName from '../utils/displayName';
+import { displayName } from '@omnia/orcorum';
 
 export const ArrayContext = React.createContext({});
 
@@ -35,7 +34,7 @@ const withSetOf = EnhancedComponent => {
 
   WithSetOf.Item = EnhancedComponent;
 
-  WithSetOf.displayName = `WithSetOf(${getDisplayName(EnhancedComponent)})`;
+  WithSetOf.displayName = `WithSetOf(${displayName(EnhancedComponent)})`;
 
   WithSetOf.defaultProps = {
     value: undefined,

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import hoistNonReactStatics from 'hoist-non-react-statics';
+import { displayName } from '@omnia/orcorum';
 
 import Text from '../Text';
 import Pane from '../Pane';
@@ -29,6 +30,8 @@ const withField = EnhancedComponent => {
       </StyledPane>
     );
   };
+
+  WithField.displayName = `WithField(${displayName(EnhancedComponent)})`;
 
   WithField.propTypes = {
     label: PropTypes.string

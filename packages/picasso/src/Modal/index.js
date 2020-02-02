@@ -2,6 +2,7 @@ import React, { createContext, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 import { zIndex } from 'styled-system';
+import { assigned } from '@omnia/orcorum';
 
 import ModalHeader from './ModalHeader';
 import ModalContent from './ModalContent';
@@ -9,7 +10,6 @@ import ModalAction from './ModalAction';
 import Stack from '../Stack';
 import themeGet from '../theme/utils';
 import Portal from '../Portal';
-import { isAssigned } from '../utils';
 
 const containerLanding = keyframes`
   from {
@@ -61,7 +61,7 @@ class Modal extends React.Component {
 
     const { show } = this.props;
 
-    this.isControlled = isAssigned(show);
+    this.isControlled = assigned(show);
 
     this.state = {
       isOpen: false
@@ -146,7 +146,7 @@ Modal.propTypes = {
 Modal.defaultProps = {
   children: () => {},
   render: () => {},
-  show: null,
+  show: undefined,
   onClose: () => {}
 };
 
