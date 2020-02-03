@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CheckBox, { CheckBoxWithValue, CheckBoxArray } from './index';
 
 export default {
-  title: 'CheckBox',
+  title: 'Components|CheckBox',
   component: CheckBox
 };
 

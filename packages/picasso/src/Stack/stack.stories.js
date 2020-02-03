@@ -5,7 +5,7 @@ import Stack from './index';
 import Pane from '../Pane';
 
 export default {
-  title: 'Stack',
+  title: 'Components|Stack',
   component: Stack
 };
 

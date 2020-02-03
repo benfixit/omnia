@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Link from './index';
 
 export default {
-  title: 'Links',
+  title: 'Components|Links',
   component: Link,
   decorators: [storyFn => <BrowserRouter>{storyFn()}</BrowserRouter>]
 };

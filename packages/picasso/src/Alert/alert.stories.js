@@ -7,7 +7,7 @@ import Button from '../Button';
 import Pane from '../Pane';
 
 export default {
-  title: 'Alert',
+  title: 'Components|Alert',
   component: Alert
 };
 

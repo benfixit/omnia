@@ -8,7 +8,7 @@ import Text from '../Text';
 import Pane from '../Pane';
 
 export default {
-  title: 'Modal',
+  title: 'Components|Modal',
   component: Modal
 };
 

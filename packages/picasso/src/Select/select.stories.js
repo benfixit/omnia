@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Select, { SelectWithValue } from './index';
 
 export default {
-  title: 'Select',
+  title: 'Components|Select',
   component: Select
 };
 

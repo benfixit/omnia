@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Radio, { RadioWithValue, RadioArray } from './index';
 
 export default {
-  title: 'Radio',
+  title: 'Components|Radio',
   component: Radio
 };
 

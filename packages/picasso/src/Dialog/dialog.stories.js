@@ -8,7 +8,7 @@ import Heading from '../Heading';
 import Pane from '../Pane';
 
 export default {
-  title: 'Dialog',
+  title: 'Components|Dialog',
   component: Dialog
 };
 

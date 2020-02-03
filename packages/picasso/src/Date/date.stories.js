@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Date from './index';
 
 export default {
-  title: 'Date',
+  title: 'Components|Date',
   component: Date
 };
 

@@ -4,7 +4,7 @@ import Portal from './index';
 import Heading from '../Heading';
 
 export default {
-  title: 'Portal',
+  title: 'Components|Portal',
   component: Portal
 };
 

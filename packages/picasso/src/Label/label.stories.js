@@ -3,7 +3,7 @@ import React from 'react';
 import Label from './index';
 
 export default {
-  title: 'Label',
+  title: 'Components|Label',
   component: Label
 };
 

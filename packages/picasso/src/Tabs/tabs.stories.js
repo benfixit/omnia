@@ -2,7 +2,7 @@ import React from 'react';
 import Tabs from './index';
 
 export default {
-  title: 'Tabs',
+  title: 'Components|Tabs',
   component: Tabs
 };
 

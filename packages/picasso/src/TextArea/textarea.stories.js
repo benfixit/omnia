@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import TextArea, { TextAreaWithValue } from './index';
 
 export default {
-  title: 'TextArea',
+  title: 'Components|TextArea',
   component: TextArea
 };
 

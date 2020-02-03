@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Input, { InputWithValue } from './index';
 
 export default {
-  title: 'Input',
+  title: 'Components|Input',
   component: Input
 };
 
