@@ -1,15 +1,15 @@
 import _chunk from './index';
 
 describe('Checks that the input array is chunked', () => {
-  test('Display Name set', () => {
-    expect(_chunk(null)).toBe(true);
+  test('Non empty array', () => {
+    expect(_chunk([2, 4, 3, 34, 11, 10], 2)).toEqual([
+      [2, 4],
+      [3, 34],
+      [11, 10]
+    ]);
   });
 
-  test('Name set', () => {
-    expect(_chunk(null)).toBe(true);
-  });
-
-  test('Display Name and Name not set', () => {
-    expect(_chunk(null)).toBe(true);
+  test('Empty array', () => {
+    expect(_chunk([])).toEqual([]);
   });
 });

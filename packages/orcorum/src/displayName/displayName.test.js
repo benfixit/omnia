@@ -2,14 +2,17 @@ import _displayName from './index';
 
 describe('Checks that display name is returned', () => {
   test('Display Name set', () => {
-    expect(_displayName(null)).toBe(true);
+    const component = { displayName: 'TestComponent' };
+    expect(_displayName(component)).toBe('TestComponent');
   });
 
   test('Name set', () => {
-    expect(_displayName(null)).toBe(true);
+    const component = { name: 'TestComponent' };
+    expect(_displayName(component)).toBe('TestComponent');
   });
 
   test('Display Name and Name not set', () => {
-    expect(_displayName(null)).toBe(true);
+    const component = {};
+    expect(_displayName(component)).toBe('Component');
   });
 });
