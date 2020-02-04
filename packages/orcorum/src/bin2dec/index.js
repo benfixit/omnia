@@ -3,8 +3,8 @@
  * @param num
  * @returns {number}
  */
-const bin2dec = num => {
+const _bin2dec = num => {
   return parseInt(num, 2);
 };
 
-export default bin2dec;
+export default _bin2dec;
