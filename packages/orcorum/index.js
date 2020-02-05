@@ -6,6 +6,7 @@ import _concat from './src/concat';
 import _bin2dec from './src/bin2dec';
 import _dec2bin from './src/dec2bin';
 import _difference from './src/difference';
+import _differenceBy from './src/differenceBy';
 
 export const assigned = _assigned;
 export const displayName = _displayName;
@@ -15,3 +16,4 @@ export const concat = _concat;
 export const bin2dec = _bin2dec;
 export const dec2bin = _dec2bin;
 export const difference = _difference;
+export const differenceBy = _differenceBy;
