@@ -8,6 +8,7 @@ const Income = lazy(() => import('./components/Income/index'));
 const EditIncome = lazy(() => import('./components/Income/EditIncome'));
 const Savings = lazy(() => import('./components/Savings/index'));
 const EditSavings = lazy(() => import('./components/Savings/EditSavings'));
+const Note = lazy(() => import('./components/Note/index'));
 const Home = lazy(() => import('./components/Home'));
 
 const { Loading } = Picasso;
@@ -24,6 +25,7 @@ const Routes = () => {
           <Route path="/incomes/:year?/:month?" component={Income} />
           <Route path="/savings/edit/:id" component={EditSavings} />
           <Route path="/savings/:year?/:month?" component={Savings} />
+          <Route path="/notes" component={Note} />
         </Switch>
       </Suspense>
     </BrowserRouter>
