@@ -7,6 +7,7 @@ import _bin2dec from './src/bin2dec';
 import _dec2bin from './src/dec2bin';
 import _difference from './src/difference';
 import _differenceBy from './src/differenceBy';
+import _isEmptyArray from './src/isEmptyArray';
 
 export const assigned = _assigned;
 export const displayName = _displayName;
@@ -17,3 +18,4 @@ export const bin2dec = _bin2dec;
 export const dec2bin = _dec2bin;
 export const difference = _difference;
 export const differenceBy = _differenceBy;
+export const isEmptyArray = _isEmptyArray;
