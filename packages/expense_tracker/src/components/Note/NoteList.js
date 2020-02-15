@@ -1,93 +1,38 @@
 import React from 'react';
 import styled from 'styled-components';
-import { v4 } from 'uuid';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import Picasso from '@omnia/picasso';
-
-import { Table } from '../../styles';
-import { formatter, getDecimalNumber } from '../../utils/money';
 
 const { Pane } = Picasso;
 
-const TableContainer = styled(Pane)`
+const NoteContainer = styled(Pane)`
   justify-content: center;
   padding: 15px 10px;
+  width: 60%;
+  margin: 0px auto;
 `;
 
-const TitleTableData = styled(Table.Td)`
-  text-align: left;
+const Note = styled(Pane)`
+  padding: 15px 10px;
+  margin-bottom: 20px;
+  border: thin solid gray;
 `;
 
-const TableFooterTh = styled(Table.Th)`
-  text-align: right;
-  background-color: white;
-  color: #000000;
-`;
-
-const SavingsTable = props => {
-  const { savings } = props;
-
-  const estimatedSavingsTotal = savings.reduce(
-    (acc, item) => acc + getDecimalNumber(item.amount),
-    0
-  );
-
-  const actualSavingsTotal = savings.reduce(
-    (acc, item) => acc + getDecimalNumber(item.actual),
-    0
-  );
+const NoteList = props => {
+  const { notes } = props;
 
   return (
-    <TableContainer>
-      <Table.Table>
-        <thead>
-          <tr>
-            <Table.Th>Description</Table.Th>
-            <Table.Th>Amount</Table.Th>
-            <Table.Th>Actual</Table.Th>
-            <Table.Th>Action</Table.Th>
-          </tr>
-        </thead>
-        <tbody>
-          {savings.map(saving => {
-            const { _id: savingsId } = saving;
-
-            return (
-              <tr key={v4()}>
-                <TitleTableData>{saving.description}</TitleTableData>
-                <Table.Td>
-                  {formatter.format(getDecimalNumber(saving.amount))}
-                </Table.Td>
-                <Table.Td>
-                  {formatter.format(getDecimalNumber(saving.actual))}
-                </Table.Td>
-                <Table.Td>
-                  <Link to={`/savings/edit/${savingsId}`}>Edit</Link>
-                </Table.Td>
-              </tr>
-            );
-          })}
-        </tbody>
-        <tfoot>
-          <tr>
-            <TableFooterTh>Total</TableFooterTh>
-            <TableFooterTh>
-              {formatter.format(estimatedSavingsTotal)}
-            </TableFooterTh>
-            <TableFooterTh>
-              {formatter.format(actualSavingsTotal)}
-            </TableFooterTh>
-            <TableFooterTh />
-          </tr>
-        </tfoot>
-      </Table.Table>
-    </TableContainer>
+    <NoteContainer>
+      {notes.map(note => {
+        const { _id: noteId } = note;
+        return <Note key={noteId}>{note.description}</Note>;
+      })}
+    </NoteContainer>
   );
 };
 
-SavingsTable.propTypes = {
-  savings: PropTypes.instanceOf(Array).isRequired
+NoteList.propTypes = {
+  notes: PropTypes.instanceOf(Array).isRequired
 };
 
-export default SavingsTable;
+export default NoteList;

@@ -4,11 +4,11 @@ import Picasso from '@omnia/picasso';
 
 import { FormButton, StyledButton, StyledForm, StyledPane } from '../../styles';
 
-const { Button, DateField, Heading, InputField, Modal } = Picasso;
+const { Button, Heading, TextAreaField, Modal } = Picasso;
 
-const SavingsModal = props => {
+const NoteModal = props => {
   const {
-    data: { amount, actual, date, description },
+    data: { description },
     handleChange,
     handleSubmit
   } = props;
@@ -18,33 +18,15 @@ const SavingsModal = props => {
       render={({ toggle }) => (
         <>
           <Modal.Header>
-            <Heading as="h2">Savings</Heading>
+            <Heading as="h2">Notes</Heading>
           </Modal.Header>
           <Modal.Content>
             <StyledForm onSubmit={event => handleSubmit(event, toggle)}>
-              <InputField
-                name="amount"
-                value={amount}
-                onChange={handleChange}
-                label="Amount"
-              />
-              <InputField
-                name="actual"
-                value={actual}
-                onChange={handleChange}
-                label="Actual"
-              />
-              <InputField
+              <TextAreaField
                 name="description"
                 value={description}
                 onChange={handleChange}
                 label="Description"
-              />
-              <DateField
-                name="date"
-                value={date}
-                onChange={handleChange}
-                label="period"
               />
               <FormButton type="submit">Submit</FormButton>
             </StyledForm>
@@ -57,20 +39,17 @@ const SavingsModal = props => {
         </>
       )}
     >
-      {({ toggle }) => <StyledButton onClick={toggle}>Add Savings</StyledButton>}
+      {({ toggle }) => <StyledButton onClick={toggle}>Add Note</StyledButton>}
     </Modal>
   );
 };
 
-SavingsModal.propTypes = {
+NoteModal.propTypes = {
   data: PropTypes.shape({
-    date: PropTypes.string,
-    amount: PropTypes.string,
-    actual: PropTypes.string,
     description: PropTypes.string
   }).isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired
 };
 
-export default SavingsModal;
+export default NoteModal;
