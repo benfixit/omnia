@@ -1,43 +1,27 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import { Query } from 'react-apollo';
 import Picasso from '@omnia/picasso';
 
-import { GET_SAVINGS } from '../graphql/savings';
-import { getQueryYearAndMonth } from '../utils/date';
+import { GET_NOTES } from '../graphql/notes';
 
 const { Loading } = Picasso;
 
-const withSavingsQuery = EnhancedComponent => {
-  const WithSavingsQuery = props => {
-    const {
-      match: {
-        params: { year, month }
-      }
-    } = props;
+const withNoteQuery = EnhancedComponent => {
+  const WithNoteQuery = props => {
     return (
-      <Query query={GET_SAVINGS} variables={getQueryYearAndMonth(year, month)}>
+      <Query query={GET_NOTES}>
         {({ data, loading, error }) => {
           if (loading) return <Loading />;
           if (error) return <h2>Error :(</h2>;
-          const { savings } = data;
-          return <EnhancedComponent {...props} savings={savings} />;
+          const { notes } = data;
+          return <EnhancedComponent {...props} notes={notes} />;
         }}
       </Query>
     );
   };
 
-  WithSavingsQuery.propTypes = {
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        year: PropTypes.string,
-        month: PropTypes.string
-      })
-    }).isRequired
-  };
-
-  return hoistNonReactStatics(WithSavingsQuery, EnhancedComponent);
+  return hoistNonReactStatics(WithNoteQuery, EnhancedComponent);
 };
 
-export default withSavingsQuery;
+export default withNoteQuery;
