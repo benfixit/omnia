@@ -14,7 +14,7 @@ import {
   GET_EXPENSES
 } from '../../graphql/expenses';
 import withCategoryQuery from '../../hoc/withCategoryQuery';
-import { getDate } from '../../utils/date';
+import { getDate, getYearAndMonthText } from '../../utils/date';
 import { setDecimalNumber, getDecimalNumber } from '../../utils/money';
 
 const { DateField, InputField, SelectField, Pane } = Picasso;
@@ -91,6 +91,7 @@ class EditExpense extends React.Component {
         params: { id }
       }
     } = this.props;
+    const period = getYearAndMonthText();
     mutate({
       variables: {
         _id: id,
@@ -107,7 +108,7 @@ class EditExpense extends React.Component {
           query: GET_EXPENSES
         }
       ]
-    }).then(() => history.push('/expenses'));
+    }).then(() => history.push(`/expenses/${period.year}/${period.month}`));
   };
 
   render() {

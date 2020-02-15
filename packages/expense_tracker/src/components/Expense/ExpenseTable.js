@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { v4 } from 'uuid';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { graphql } from 'react-apollo';
@@ -9,6 +8,7 @@ import Picasso from '@omnia/picasso';
 
 import { Table } from '../../styles';
 import { formatter, getDecimalNumber } from '../../utils/money';
+import { getYearAndMonthText } from '../../utils/date';
 import { DELETE_EXPENSE, GET_EXPENSES } from '../../graphql/expenses';
 
 const { Button, Dialog, Heading, Label, Link, Pane, Text } = Picasso;
@@ -68,6 +68,7 @@ class ExpenseTable extends React.Component {
     const { handleToggleDeleteDialog } = this;
     const { targetExpense } = this.state;
     const { mutate, history } = this.props;
+    const period = getYearAndMonthText();
     mutate({
       variables: {
         _id: targetExpense
@@ -79,7 +80,7 @@ class ExpenseTable extends React.Component {
       ]
     }).then(() => {
       handleToggleDeleteDialog();
-      history.push('/expenses');
+      history.push(`/expenses/${period.year}/${period.month}`);
     });
   };
 
@@ -119,7 +120,7 @@ class ExpenseTable extends React.Component {
               const { _id: expenseId } = expense;
 
               return (
-                <tr key={v4()}>
+                <tr key={expenseId}>
                   <TitleTableData>{expense.description}</TitleTableData>
                   <Table.Td>{formatter.format(budgetedExpense)}</Table.Td>
                   <Table.Td>{formatter.format(actualExpense)}</Table.Td>

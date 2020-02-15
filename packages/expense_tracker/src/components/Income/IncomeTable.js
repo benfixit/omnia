@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { v4 } from 'uuid';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Picasso from '@omnia/picasso';
@@ -48,7 +47,7 @@ const IncomeTable = props => {
             const { _id: incomeId } = income;
 
             return (
-              <tr key={v4()}>
+              <tr key={incomeId}>
                 <TitleTableData>{income.description}</TitleTableData>
                 <Table.Td>
                   {formatter.format(getDecimalNumber(income.amount))}

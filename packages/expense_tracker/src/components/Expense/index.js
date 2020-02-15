@@ -16,7 +16,7 @@ import { ADD_EXPENSE, GET_EXPENSES } from '../../graphql/expenses';
 import Layout from '../Layout';
 import { Layout as LayoutStyle, StyledHeading } from '../../styles';
 import { setDecimalNumber } from '../../utils/money';
-import { monthsOfYear, getDate } from '../../utils/date';
+import { monthsOfYear, getDate, getYearAndMonthText } from '../../utils/date';
 
 const { Link, Pane } = Picasso;
 
@@ -79,6 +79,7 @@ class Expense extends Component {
     } = this.state;
     const expenseDate = new Date(date);
     const { mutate, history } = this.props;
+    const period = getYearAndMonthText();
     mutate({
       variables: {
         budget: setDecimalNumber(budget),
@@ -96,7 +97,7 @@ class Expense extends Component {
       ]
     }).then(() => {
       toggle();
-      history.push('/expenses');
+      history.push(`/expenses/${period.year}/${period.month}`);
     });
   };
 

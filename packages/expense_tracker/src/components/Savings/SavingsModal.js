@@ -57,7 +57,9 @@ const SavingsModal = props => {
         </>
       )}
     >
-      {({ toggle }) => <StyledButton onClick={toggle}>Add Income</StyledButton>}
+      {({ toggle }) => (
+        <StyledButton onClick={toggle}>Add Savings</StyledButton>
+      )}
     </Modal>
   );
 };
