@@ -1,12 +1,12 @@
 {
-  "name": "@omnia/codility",
+  "name": "@omnia/leetcode",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "author": "Inya Chukwuemeka",
   "private": true,
   "keywords": [
-    "Codility",
+    "Leetcode",
     "Exercises and solutions"
   ]
 }
