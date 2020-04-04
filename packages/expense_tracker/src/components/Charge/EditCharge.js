@@ -8,25 +8,27 @@ import Picasso from '@omnia/picasso';
 
 import client from '../../apollo/client';
 import { FormButton, StyledForm } from '../../styles';
-import { EDIT_INCOME, GET_INCOME } from '../../graphql/incomes';
+import { EDIT_CHARGE, GET_CHARGE } from '../../graphql/charges';
 import { getDate, getYearAndMonthText } from '../../utils/date';
 import { getDecimalNumber, setDecimalNumber } from '../../utils/money';
+import withChargeTypeQuery from '../../hoc/withChargeTypeQuery';
 
-const { DateField, InputField, Pane } = Picasso;
+const { DateField, InputField, Pane, SelectField } = Picasso;
 
 const Container = styled(Pane)`
   justify-content: center;
   padding: 15px 10px;
 `;
 
-class EditIncome extends React.Component {
+class EditCharge extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      incomeData: {
+      data: {
         amount: '0',
         description: '',
-        date: getDate()
+        date: getDate(),
+        type: ''
       }
     };
   }
@@ -39,39 +41,43 @@ class EditIncome extends React.Component {
     } = this.props;
     client
       .query({
-        query: GET_INCOME,
+        query: GET_CHARGE,
         variables: { _id: id }
       })
       .then(response => {
-        const { incomeData } = this.state;
-        const { income } = response.data;
+        const { data } = this.state;
+        const { charge } = response.data;
+        const {
+          type: { _id: typeId }
+        } = charge;
         this.setState({
-          incomeData: {
-            ...incomeData,
-            amount: getDecimalNumber(income.amount),
-            description: income.description,
-            date: getDate(income.year, income.month, income.day)
+          data: {
+            ...data,
+            amount: getDecimalNumber(charge.amount),
+            description: charge.description,
+            type: typeId,
+            date: getDate(charge.year, charge.month, charge.day)
           }
         });
       });
   }
 
   handleChange = event => {
-    const { incomeData } = this.state;
+    const { data } = this.state;
     const {
       target: { name, value }
     } = event;
     this.setState({
-      incomeData: { ...incomeData, [name]: value }
+      data: { ...data, [name]: value }
     });
   };
 
   handleSubmit = event => {
     event.preventDefault();
     const {
-      incomeData: { amount, description, date }
+      data: { amount, description, date, type }
     } = this.state;
-    const incomeDate = new Date(date);
+    const chargeDate = new Date(date);
     const {
       mutate,
       history,
@@ -85,21 +91,39 @@ class EditIncome extends React.Component {
         _id: id,
         amount: setDecimalNumber(amount),
         description,
-        year: Number(incomeDate.getFullYear()),
-        month: Number(incomeDate.getMonth()),
-        day: Number(incomeDate.getDate())
+        type,
+        year: Number(chargeDate.getFullYear()),
+        month: Number(chargeDate.getMonth()),
+        day: Number(chargeDate.getDate())
       }
-    }).then(() => history.push(`/incomes/${period.year}/${period.month}`));
+    }).then(() => history.push(`/charges/${period.year}/${period.month}`));
   };
 
   render() {
     const {
-      incomeData: { amount, description, date }
+      data: { amount, description, date, type }
     } = this.state;
+    const { chargeTypes: types } = this.props;
     const { handleChange, handleSubmit } = this;
     return (
       <Container>
         <StyledForm onSubmit={handleSubmit}>
+          <SelectField
+            name="type"
+            onChange={handleChange}
+            value={type}
+            label="Type"
+          >
+            <option value="">Select a type</option>
+            {types.map(item => {
+              const { _id: id, title } = item;
+              return (
+                <option value={id} key={id}>
+                  {title}
+                </option>
+              );
+            })}
+          </SelectField>
           <InputField
             name="amount"
             value={amount}
@@ -125,7 +149,7 @@ class EditIncome extends React.Component {
   }
 }
 
-EditIncome.propTypes = {
+EditCharge.propTypes = {
   mutate: PropTypes.func,
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -134,11 +158,16 @@ EditIncome.propTypes = {
   }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func
-  }).isRequired
+  }).isRequired,
+  chargeTypes: PropTypes.instanceOf(Array).isRequired
 };
 
-EditIncome.defaultProps = {
+EditCharge.defaultProps = {
   mutate: () => {}
 };
 
-export default compose(withRouter, graphql(EDIT_INCOME))(EditIncome);
+export default compose(
+  withRouter,
+  graphql(EDIT_CHARGE),
+  withChargeTypeQuery
+)(EditCharge);

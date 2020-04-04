@@ -12,7 +12,7 @@ import SavingModal from './SavingsModal';
 import SavingsTable from './SavingsTable';
 import Layout from '../Layout';
 import { Layout as LayoutStyle, StyledHeading } from '../../styles';
-import { monthsOfYear, getDate } from '../../utils/date';
+import { monthsOfYear, getDate, getYearAndMonthText } from '../../utils/date';
 import { setDecimalNumber } from '../../utils/money';
 import { ADD_SAVING, GET_SAVINGS } from '../../graphql/savings';
 import withSavingsQuery from '../../hoc/withSavingsQuery';
@@ -55,7 +55,8 @@ class Savings extends Component {
         amount: '0',
         actual: '0',
         description: '',
-        date: getDate()
+        date: getDate(),
+        type: ''
       }
     };
   }
@@ -73,11 +74,12 @@ class Savings extends Component {
   handleSubmit = (event, toggle) => {
     event.preventDefault();
     const {
-      data: { date, description, amount, actual }
+      data: { date, description, amount, actual, type }
     } = this.state;
 
     const savingsDate = new Date(date);
     const { mutate, history } = this.props;
+    const period = getYearAndMonthText();
     mutate({
       variables: {
         amount: setDecimalNumber(amount),
@@ -85,7 +87,8 @@ class Savings extends Component {
         description,
         year: Number(savingsDate.getFullYear()),
         month: Number(savingsDate.getMonth()),
-        day: Number(savingsDate.getDate())
+        day: Number(savingsDate.getDate()),
+        type
       },
       refetchQueries: [
         {
@@ -94,7 +97,7 @@ class Savings extends Component {
       ]
     }).then(() => {
       toggle();
-      history.push('/savings');
+      history.push(`/savings/${period.year}/${period.month}`);
     });
   };
 

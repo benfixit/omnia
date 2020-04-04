@@ -6,6 +6,7 @@ import Picasso from '@omnia/picasso';
 const { Pane } = Picasso;
 
 const NoteContainer = styled(Pane)`
+  flex-direction: column;
   justify-content: center;
   padding: 15px 10px;
   width: 60%;

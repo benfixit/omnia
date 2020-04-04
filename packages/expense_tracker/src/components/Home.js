@@ -58,10 +58,13 @@ const Home = props => {
     getSavingsIncomeMonthName
   )();
 
-  const incomesTotal = incomes.reduce(
-    (acc, item) => acc + getDecimalNumber(item.amount),
-    0
-  );
+  const incomesTotal = incomes
+    .filter(
+      item =>
+        item.year === savingsIncomePeriod.year &&
+        item.month === savingsIncomePeriod.month
+    )
+    .reduce((acc, item) => acc + getDecimalNumber(item.amount), 0);
 
   const budgetedExpensesTotal = expenses
     .filter(
@@ -77,7 +80,7 @@ const Home = props => {
     )
     .reduce((acc, item) => acc + getDecimalNumber(item.actual), 0);
 
-  const estimatedSavingsTotal = savings
+  const estimatedSavingsForTheMonth = savings
     .filter(
       item =>
         item.year === savingsIncomePeriod.year &&
@@ -85,13 +88,23 @@ const Home = props => {
     )
     .reduce((acc, item) => acc + getDecimalNumber(item.amount), 0);
 
-  const actualSavingsTotal = savings
+  const actualSavingsForTheMonth = savings
     .filter(
       item =>
         item.year === savingsIncomePeriod.year &&
         item.month === savingsIncomePeriod.month
     )
     .reduce((acc, item) => acc + getDecimalNumber(item.actual), 0);
+
+  const estimatedSavingsTotal = savings.reduce(
+    (acc, item) => acc + getDecimalNumber(item.amount),
+    0
+  );
+
+  const actualSavingsTotal = savings.reduce(
+    (acc, item) => acc + getDecimalNumber(item.actual),
+    0
+  );
 
   return (
     <Layout>
@@ -109,13 +122,15 @@ const Home = props => {
             </tr>
             <tr>
               <Th>Savings ({savingsIncomeMonthName})</Th>
-              <Td>{formatter.format(estimatedSavingsTotal)}</Td>
+              <Td>{formatter.format(estimatedSavingsForTheMonth)}</Td>
             </tr>
             <tr>
               <Th>Bank Balance</Th>
               <Td>
                 {formatter.format(
-                  incomesTotal - budgetedExpensesTotal - estimatedSavingsTotal
+                  incomesTotal -
+                    budgetedExpensesTotal -
+                    estimatedSavingsForTheMonth
                 )}
               </Td>
             </tr>
@@ -142,13 +157,13 @@ const Home = props => {
             </tr>
             <tr>
               <Th>Actual Savings ({savingsIncomeMonthName})</Th>
-              <Td>{formatter.format(actualSavingsTotal)}</Td>
+              <Td>{formatter.format(actualSavingsForTheMonth)}</Td>
             </tr>
             <tr>
               <Th>Bank Balance</Th>
               <Td>
                 {formatter.format(
-                  incomesTotal - actualExpensesTotal - actualSavingsTotal
+                  incomesTotal - actualExpensesTotal - actualSavingsForTheMonth
                 )}
               </Td>
             </tr>

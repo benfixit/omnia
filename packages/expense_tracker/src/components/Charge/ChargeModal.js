@@ -4,11 +4,12 @@ import Picasso from '@omnia/picasso';
 
 import { FormButton, StyledButton, StyledForm, StyledPane } from '../../styles';
 
-const { Button, DateField, Heading, InputField, Modal } = Picasso;
+const { Button, DateField, Heading, InputField, Modal, SelectField } = Picasso;
 
-const SavingsModal = props => {
+const ChargeModal = props => {
   const {
-    data: { amount, actual, date, description },
+    data: { amount, date, description, type },
+    chargeTypes: types,
     handleChange,
     handleSubmit
   } = props;
@@ -18,21 +19,31 @@ const SavingsModal = props => {
       render={({ toggle }) => (
         <>
           <Modal.Header>
-            <Heading as="h2">Savings</Heading>
+            <Heading as="h2">Charge</Heading>
           </Modal.Header>
           <Modal.Content>
             <StyledForm onSubmit={event => handleSubmit(event, toggle)}>
+              <SelectField
+                name="type"
+                onChange={handleChange}
+                value={type}
+                label="Type"
+              >
+                <option value="">Select a type</option>
+                {types.map(item => {
+                  const { _id: id, title } = item;
+                  return (
+                    <option value={id} key={id}>
+                      {title}
+                    </option>
+                  );
+                })}
+              </SelectField>
               <InputField
                 name="amount"
                 value={amount}
                 onChange={handleChange}
                 label="Amount"
-              />
-              <InputField
-                name="actual"
-                value={actual}
-                onChange={handleChange}
-                label="Actual"
               />
               <InputField
                 name="description"
@@ -57,23 +68,21 @@ const SavingsModal = props => {
         </>
       )}
     >
-      {({ toggle }) => (
-        <StyledButton onClick={toggle}>Add Savings</StyledButton>
-      )}
+      {({ toggle }) => <StyledButton onClick={toggle}>Add Charge</StyledButton>}
     </Modal>
   );
 };
 
-SavingsModal.propTypes = {
+ChargeModal.propTypes = {
   data: PropTypes.shape({
     date: PropTypes.string,
     amount: PropTypes.string,
-    actual: PropTypes.string,
     description: PropTypes.string,
     type: PropTypes.string
   }).isRequired,
+  chargeTypes: PropTypes.instanceOf(Array).isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired
 };
 
-export default SavingsModal;
+export default ChargeModal;

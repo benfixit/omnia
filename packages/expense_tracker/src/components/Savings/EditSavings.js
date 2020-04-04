@@ -9,7 +9,7 @@ import Picasso from '@omnia/picasso';
 import client from '../../apollo/client';
 import { FormButton, StyledForm } from '../../styles';
 import { EDIT_SAVING, GET_SAVING } from '../../graphql/savings';
-import { getDate } from '../../utils/date';
+import { getDate, getYearAndMonthText } from '../../utils/date';
 import { getDecimalNumber, setDecimalNumber } from '../../utils/money';
 
 const { DateField, InputField, Pane } = Picasso;
@@ -81,6 +81,7 @@ class EditSavings extends React.Component {
         params: { id }
       }
     } = this.props;
+    const period = getYearAndMonthText();
     mutate({
       variables: {
         _id: id,
@@ -91,7 +92,7 @@ class EditSavings extends React.Component {
         month: Number(savingsDate.getMonth()),
         day: Number(savingsDate.getDate())
       }
-    }).then(() => history.push('/savings'));
+    }).then(() => history.push(`/savings/${period.year}/${period.month}`));
   };
 
   render() {
