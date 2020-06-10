@@ -1,53 +1,43 @@
 import gql from 'graphql-tag';
 
-export const GET_CHARGES = gql`
-  query ChargeList($year: Int, $month: Int) {
-    charges(year: $year, month: $month) {
+export const GET_INVESTMENTS = gql`
+  query InvestmentsList($year: Int, $month: Int) {
+    investments(year: $year, month: $month) {
       _id
-      description
       amount
+      description
       year
       month
       day
-      type {
-        _id
-        title
-      }
       createdAt
     }
   }
 `;
 
-export const GET_CHARGE = gql`
-  query SingleCharge($_id: ID!) {
-    charge(_id: $_id) {
+export const GET_INVESTMENT = gql`
+  query SingleInvestment($_id: ID!) {
+    investment(_id: $_id) {
       _id
       description
       amount
       year
       month
       day
-      type {
-        _id
-        title
-      }
     }
   }
 `;
 
-export const ADD_CHARGE = gql`
-  mutation AddCharge(
+export const ADD_INVESTMENT = gql`
+  mutation(
     $amount: Int
     $description: String
-    $type: ID!
     $year: Int
     $month: Int
     $day: Int
   ) {
-    createCharge(
+    createInvestment(
       amount: $amount
       description: $description
-      type: $type
       year: $year
       month: $month
       day: $day
@@ -58,28 +48,22 @@ export const ADD_CHARGE = gql`
       year
       month
       day
-      type {
-        _id
-        title
-      }
     }
   }
 `;
 
-export const EDIT_CHARGE = gql`
-  mutation EditCharge(
+export const EDIT_INVESTMENT = gql`
+  mutation EditInvestment(
     $_id: ID!
     $amount: Int
     $description: String
-    $type: ID!
     $year: Int
     $month: Int
     $day: Int
   ) {
-    editCharge(
+    editInvestment(
       _id: $_id
       amount: $amount
-      type: $type
       description: $description
       year: $year
       month: $month
@@ -91,23 +75,6 @@ export const EDIT_CHARGE = gql`
       year
       month
       day
-      type {
-        _id
-        title
-      }
-    }
-  }
-`;
-
-export const DELETE_CHARGE = gql`
-  mutation DropCharge($_id: ID!) {
-    deleteCharge(_id: $_id) {
-      _id
-      amount
-      type {
-        _id
-        title
-      }
     }
   }
 `;

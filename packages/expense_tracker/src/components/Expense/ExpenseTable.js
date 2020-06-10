@@ -113,37 +113,39 @@ class ExpenseTable extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {expenses.map(expense => {
-              const budgetedExpense = getDecimalNumber(expense.budget);
-              const actualExpense = getDecimalNumber(expense.actual);
-              const difference = budgetedExpense - actualExpense;
-              const { _id: expenseId } = expense;
+            {expenses
+              .sort((a, b) => a.category.title.localeCompare(b.category.title))
+              .map(expense => {
+                const budgetedExpense = getDecimalNumber(expense.budget);
+                const actualExpense = getDecimalNumber(expense.actual);
+                const difference = budgetedExpense - actualExpense;
+                const { _id: expenseId } = expense;
 
-              return (
-                <tr key={expenseId}>
-                  <TitleTableData>{expense.description}</TitleTableData>
-                  <Table.Td>{formatter.format(budgetedExpense)}</Table.Td>
-                  <Table.Td>{formatter.format(actualExpense)}</Table.Td>
-                  <Table.Td
-                    status={Number(difference) > 0 ? 'positive' : 'negative'}
-                  >
-                    {Number(difference) > 0
-                      ? formatter.format(Math.abs(difference))
-                      : `(${formatter.format(Math.abs(difference))})`}
-                  </Table.Td>
-                  <Table.Td>{expense.category.title}</Table.Td>
-                  <ActionTableColumn>
-                    <Link href={`/expenses/edit/${expenseId}`}>Edit</Link>
-                    <DeleteLabel
-                      variant="danger"
-                      onClick={() => handleToggleDeleteDialog(expenseId)}
+                return (
+                  <tr key={expenseId}>
+                    <TitleTableData>{expense.description}</TitleTableData>
+                    <Table.Td>{formatter.format(budgetedExpense)}</Table.Td>
+                    <Table.Td>{formatter.format(actualExpense)}</Table.Td>
+                    <Table.Td
+                      status={Number(difference) > 0 ? 'positive' : 'negative'}
                     >
-                      Delete
-                    </DeleteLabel>
-                  </ActionTableColumn>
-                </tr>
-              );
-            })}
+                      {Number(difference) > 0
+                        ? formatter.format(Math.abs(difference))
+                        : `(${formatter.format(Math.abs(difference))})`}
+                    </Table.Td>
+                    <Table.Td>{expense.category.title}</Table.Td>
+                    <ActionTableColumn>
+                      <Link href={`/expenses/edit/${expenseId}`}>Edit</Link>
+                      <DeleteLabel
+                        variant="danger"
+                        onClick={() => handleToggleDeleteDialog(expenseId)}
+                      >
+                        Delete
+                      </DeleteLabel>
+                    </ActionTableColumn>
+                  </tr>
+                );
+              })}
           </tbody>
           <tfoot>
             <tr>

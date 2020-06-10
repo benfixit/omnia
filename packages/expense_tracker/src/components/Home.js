@@ -16,10 +16,12 @@ import {
   getSavingsIncomeMonthName
 } from '../utils/date';
 import { toCapitalize } from '../utils/string';
-import { INITIAL_MONEY_SAVED } from '../utils/constants';
+import { INITIAL_MONEY_SAVED, MONEY_LENT_OUT } from '../utils/constants';
 import withExpenseQuery from '../hoc/withExpenseQuery';
 import withIncomeQuery from '../hoc/withIncomeQuery';
 import withSavingsQuery from '../hoc/withSavingsQuery';
+import withChargeQuery from '../hoc/withChargeQuery';
+import withInvestmentsQuery from '../hoc/withInvestmentQuery';
 
 const { Heading, Pane } = Picasso;
 
@@ -49,9 +51,10 @@ const StyledHeading = styled(Heading)`
 `;
 
 const Home = props => {
-  const { expenses, incomes, savings } = props;
+  const { expenses, incomes, savings, charges, investments } = props;
   const expensePeriod = getYearAndMonth();
   const savingsIncomePeriod = getSavingsIncomeMonthAndYear();
+  // const chargesPeriod = savingsIncomePeriod;
   const monthName = compose(toCapitalize, getMonthName)();
   const savingsIncomeMonthName = compose(
     toCapitalize,
@@ -61,8 +64,8 @@ const Home = props => {
   const incomesTotal = incomes
     .filter(
       item =>
-        item.year === savingsIncomePeriod.year &&
-        item.month === savingsIncomePeriod.month
+        item.year >= savingsIncomePeriod.year &&
+        item.month >= savingsIncomePeriod.month
     )
     .reduce((acc, item) => acc + getDecimalNumber(item.amount), 0);
 
@@ -80,21 +83,39 @@ const Home = props => {
     )
     .reduce((acc, item) => acc + getDecimalNumber(item.actual), 0);
 
-  const estimatedSavingsForTheMonth = savings
+  const estimatedSavingsForTheMonthTillDate = savings
     .filter(
       item =>
-        item.year === savingsIncomePeriod.year &&
-        item.month === savingsIncomePeriod.month
+        item.year >= savingsIncomePeriod.year &&
+        item.month >= savingsIncomePeriod.month
     )
     .reduce((acc, item) => acc + getDecimalNumber(item.amount), 0);
 
-  const actualSavingsForTheMonth = savings
+  const actualSavingsForTheMonthTillDate = savings
     .filter(
       item =>
-        item.year === savingsIncomePeriod.year &&
-        item.month === savingsIncomePeriod.month
+        item.year >= savingsIncomePeriod.year &&
+        item.month >= savingsIncomePeriod.month
     )
     .reduce((acc, item) => acc + getDecimalNumber(item.actual), 0);
+
+  const totalSavingsChargesForTheMonthTillDate = charges
+    .filter(
+      item =>
+        item.type._id === '5e88ab6da5ae38e9f338e8fe' &&
+        item.year >= savingsIncomePeriod.year &&
+        item.month >= savingsIncomePeriod.month
+    )
+    .reduce((acc, item) => acc + getDecimalNumber(item.amount), 0);
+
+  const totalExpensesChargesForTheMonthTillDate = charges
+    .filter(
+      item =>
+        item.type._id === '5e88ab48a5ae38e9f338e8fd' &&
+        item.year >= savingsIncomePeriod.year &&
+        item.month >= savingsIncomePeriod.month
+    )
+    .reduce((acc, item) => acc + getDecimalNumber(item.amount), 0);
 
   const estimatedSavingsTotal = savings.reduce(
     (acc, item) => acc + getDecimalNumber(item.amount),
@@ -106,6 +127,22 @@ const Home = props => {
     0
   );
 
+  const totalSavingsCharges = charges
+    .filter(item => item.type._id === '5e88ab6da5ae38e9f338e8fe')
+    .reduce((acc, item) => acc + getDecimalNumber(item.amount), 0);
+
+  const investmentsTotal = investments.reduce(
+    (acc, item) => acc + getDecimalNumber(item.amount),
+    0
+  );
+
+  // const totalChargesForTheMonthTillDate = charges
+  //   .filter(
+  //     item =>
+  //       item.year >= chargesPeriod.year && item.month >= chargesPeriod.month
+  //   )
+  //   .reduce((acc, item) => acc + getDecimalNumber(item.amount), 0);
+
   return (
     <Layout>
       <StyledHeading>Summary ({monthName}) - Estimated</StyledHeading>
@@ -113,16 +150,16 @@ const Home = props => {
         <Table.Table>
           <tbody>
             <tr>
-              <Th>Income ({savingsIncomeMonthName})</Th>
+              <Th>Income: {savingsIncomeMonthName} till date</Th>
               <Td>{formatter.format(incomesTotal)}</Td>
             </tr>
             <tr>
-              <Th>Estimated Expenses</Th>
+              <Th>Expenses: ({savingsIncomeMonthName})</Th>
               <Td>{formatter.format(budgetedExpensesTotal)}</Td>
             </tr>
             <tr>
-              <Th>Savings ({savingsIncomeMonthName})</Th>
-              <Td>{formatter.format(estimatedSavingsForTheMonth)}</Td>
+              <Th>Savings: {savingsIncomeMonthName} till date</Th>
+              <Td>{formatter.format(estimatedSavingsForTheMonthTillDate)}</Td>
             </tr>
             <tr>
               <Th>Bank Balance</Th>
@@ -130,14 +167,16 @@ const Home = props => {
                 {formatter.format(
                   incomesTotal -
                     budgetedExpensesTotal -
-                    estimatedSavingsForTheMonth
+                    estimatedSavingsForTheMonthTillDate
                 )}
               </Td>
             </tr>
             <tr>
               <Th>Savings Balance</Th>
               <Td>
-                {formatter.format(INITIAL_MONEY_SAVED + estimatedSavingsTotal)}
+                {formatter.format(
+                  INITIAL_MONEY_SAVED + estimatedSavingsTotal - investmentsTotal
+                )}
               </Td>
             </tr>
           </tbody>
@@ -148,29 +187,50 @@ const Home = props => {
         <Table.Table>
           <tbody>
             <tr>
-              <Th>Income ({savingsIncomeMonthName})</Th>
+              <Th>Income: {savingsIncomeMonthName} till date</Th>
               <Td>{formatter.format(incomesTotal)}</Td>
             </tr>
             <tr>
-              <Th>Actual Expenses</Th>
+              <Th>Expenses: {savingsIncomeMonthName}</Th>
               <Td>{formatter.format(actualExpensesTotal)}</Td>
             </tr>
             <tr>
-              <Th>Actual Savings ({savingsIncomeMonthName})</Th>
-              <Td>{formatter.format(actualSavingsForTheMonth)}</Td>
+              <Th>Savings: {savingsIncomeMonthName} till date</Th>
+              <Td>{formatter.format(actualSavingsForTheMonthTillDate)}</Td>
+            </tr>
+            <tr>
+              <Th>Expenses Charges: {savingsIncomeMonthName} till date</Th>
+              <Td>
+                {formatter.format(totalExpensesChargesForTheMonthTillDate)}
+              </Td>
             </tr>
             <tr>
               <Th>Bank Balance</Th>
               <Td>
                 {formatter.format(
-                  incomesTotal - actualExpensesTotal - actualSavingsForTheMonth
+                  incomesTotal -
+                    actualExpensesTotal -
+                    actualSavingsForTheMonthTillDate -
+                    totalExpensesChargesForTheMonthTillDate
                 )}
+              </Td>
+            </tr>
+            <tr>
+              <Th>Savings Charges: {savingsIncomeMonthName} till date</Th>
+              <Td>
+                {formatter.format(totalSavingsChargesForTheMonthTillDate)}
               </Td>
             </tr>
             <tr>
               <Th>Savings Balance</Th>
               <Td>
-                {formatter.format(INITIAL_MONEY_SAVED + actualSavingsTotal)}
+                {formatter.format(
+                  INITIAL_MONEY_SAVED +
+                    actualSavingsTotal -
+                    totalSavingsCharges -
+                    investmentsTotal -
+                    MONEY_LENT_OUT
+                )}
               </Td>
             </tr>
           </tbody>
@@ -183,12 +243,16 @@ const Home = props => {
 Home.propTypes = {
   expenses: PropTypes.instanceOf(Array).isRequired,
   incomes: PropTypes.instanceOf(Array).isRequired,
-  savings: PropTypes.instanceOf(Array).isRequired
+  savings: PropTypes.instanceOf(Array).isRequired,
+  charges: PropTypes.instanceOf(Array).isRequired,
+  investments: PropTypes.instanceOf(Array).isRequired
 };
 
 export default compose(
   withRouter,
   withExpenseQuery,
   withIncomeQuery,
-  withSavingsQuery
+  withSavingsQuery,
+  withChargeQuery,
+  withInvestmentsQuery
 )(Home);

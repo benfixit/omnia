@@ -48,6 +48,7 @@ export const ADD_SAVING = gql`
     ) {
       _id
       amount
+      actual
       description
       year
       month
@@ -77,6 +78,7 @@ export const EDIT_SAVING = gql`
     ) {
       _id
       amount
+      actual
       description
       year
       month

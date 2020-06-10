@@ -53,6 +53,9 @@ const Layout = props => {
           <NavLink href={`/savings/${period.year}/${period.month}`}>
             Savings
           </NavLink>
+          <NavLink href={`/investments/${period.year}/${period.month}`}>
+            Investments
+          </NavLink>
           <NavLink href={`/charges/${period.year}/${period.month}`}>
             Charges
           </NavLink>
