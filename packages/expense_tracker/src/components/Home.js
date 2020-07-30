@@ -8,7 +8,7 @@ import Picasso from '@omnia/picasso';
 
 import Layout from './Layout';
 import { Table } from '../styles';
-import { formatter, getDecimalNumber } from '../utils/money';
+import { formatter, dollarFormatter, getDecimalNumber } from '../utils/money';
 import {
   getYearAndMonth,
   getSavingsIncomeMonthAndYear,
@@ -16,7 +16,13 @@ import {
   getSavingsIncomeMonthName
 } from '../utils/date';
 import { toCapitalize } from '../utils/string';
-import { INITIAL_MONEY_SAVED, MONEY_LENT_OUT } from '../utils/constants';
+import {
+  INITIAL_MONEY_SAVED,
+  MONEY_LENT_OUT,
+  LENT_OUT_MONEY_IN_STILL_EXPENSE_ACCOUNT,
+  SAVINGS_IN_DOLLAR_ACCOUNT,
+  COST_OF_BUYING_DOLLARS
+} from '../utils/constants';
 import withExpenseQuery from '../hoc/withExpenseQuery';
 import withIncomeQuery from '../hoc/withIncomeQuery';
 import withSavingsQuery from '../hoc/withSavingsQuery';
@@ -79,7 +85,7 @@ const Home = props => {
   const actualExpensesTotal = expenses
     .filter(
       item =>
-        item.year === expensePeriod.year && item.month === expensePeriod.month
+        item.year >= expensePeriod.year && item.month >= expensePeriod.month
     )
     .reduce((acc, item) => acc + getDecimalNumber(item.actual), 0);
 
@@ -98,6 +104,11 @@ const Home = props => {
         item.month >= savingsIncomePeriod.month
     )
     .reduce((acc, item) => acc + getDecimalNumber(item.actual), 0);
+
+  console.log(
+    'actualSavingsForTheMonthTillDate === ',
+    actualSavingsForTheMonthTillDate
+  );
 
   const totalSavingsChargesForTheMonthTillDate = charges
     .filter(
@@ -175,9 +186,16 @@ const Home = props => {
               <Th>Savings Balance</Th>
               <Td>
                 {formatter.format(
-                  INITIAL_MONEY_SAVED + estimatedSavingsTotal - investmentsTotal
+                  INITIAL_MONEY_SAVED +
+                    estimatedSavingsTotal -
+                    investmentsTotal -
+                    COST_OF_BUYING_DOLLARS
                 )}
               </Td>
+            </tr>
+            <tr>
+              <Th>Savings in dollar account</Th>
+              <Td>{dollarFormatter.format(SAVINGS_IN_DOLLAR_ACCOUNT)}</Td>
             </tr>
           </tbody>
         </Table.Table>
@@ -229,7 +247,35 @@ const Home = props => {
                     actualSavingsTotal -
                     totalSavingsCharges -
                     investmentsTotal -
-                    MONEY_LENT_OUT
+                    MONEY_LENT_OUT -
+                    LENT_OUT_MONEY_IN_STILL_EXPENSE_ACCOUNT -
+                    COST_OF_BUYING_DOLLARS
+                )}
+              </Td>
+            </tr>
+            <tr>
+              <Th>Savings in dollar account</Th>
+              <Td>{dollarFormatter.format(SAVINGS_IN_DOLLAR_ACCOUNT)}</Td>
+            </tr>
+            <tr>
+              <Th>Money Lent Out</Th>
+              <Td>{formatter.format(MONEY_LENT_OUT)}</Td>
+            </tr>
+            <tr>
+              <Th>Lent out money in transit</Th>
+              <Td>
+                {formatter.format(LENT_OUT_MONEY_IN_STILL_EXPENSE_ACCOUNT)}
+              </Td>
+            </tr>
+            <tr>
+              <Th>Bank Balance + Lent out money in transit</Th>
+              <Td>
+                {formatter.format(
+                  incomesTotal -
+                    actualExpensesTotal -
+                    actualSavingsForTheMonthTillDate -
+                    totalExpensesChargesForTheMonthTillDate +
+                    LENT_OUT_MONEY_IN_STILL_EXPENSE_ACCOUNT
                 )}
               </Td>
             </tr>
